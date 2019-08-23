@@ -5,6 +5,17 @@ VisualStudioVersion = 15.0.28307.779
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAngularGrid", "MvcAngularGrid\MvcAngularGrid.csproj", "{FE767127-C72E-462B-8552-144C93A3E09E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CB1E2877-3EB5-4D27-96B2-C04316DBBF8F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		BootstrapTemplates.dll = BootstrapTemplates.dll
+		BootstrapTemplates.pdb = BootstrapTemplates.pdb
+		EnergyPoint.Repository.dll = EnergyPoint.Repository.dll
+		EnergyPoint.Repository.pdb = EnergyPoint.Repository.pdb
+		Excel.dll = Excel.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
