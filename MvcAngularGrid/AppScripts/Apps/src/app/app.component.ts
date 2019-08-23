@@ -16,11 +16,11 @@ export class AppComponent implements OnInit  {
   title = 'Apps';
 
   columnDefs = [
-    {headerName: 'Ppe', field: 'ppe' },
-    {headerName: 'CeterCode', field: 'meterCode' },
-    {headerName: 'Name', field: 'name'},
-    {headerName: 'Tariff', field: 'tariff'},
-    {headerName: 'Company', field: 'company'}
+    {headerName: 'Ppe', field: 'ppe', sortable: true, filter: true },
+    {headerName: 'CeterCode', field: 'meterCode', sortable: true, filter: true },
+    {headerName: 'Name', field: 'name', sortable: true, filter: true},
+    {headerName: 'Tariff', field: 'tariff', sortable: true, filter: true},
+    {headerName: 'Company', field: 'company', sortable: true, filter: true}
   ];
 
   rowData: any;
