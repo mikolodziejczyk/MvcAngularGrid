@@ -52,22 +52,21 @@ export class AppComponent implements OnInit {
 
       console.log(`getRows called with ${params.startRow} to ${params.endRow}.`);
 
-      let data: [];
+      let data: IDataResponse;
 
       try {
-        data = await this.loadData();
+        data = await this.loadData(params.startRow, params.endRow);
       } catch (e) {
         alert('Loading error');
       }
 
       const pageSize = 20;
 
-      const r = data.slice(pageSize * params.startRow, pageSize * params.endRow);
-      const pages = Math.floor(data.length / pageSize);
+      const pages = Math.floor(data.count / pageSize);
 
-      console.log(`calling success with ${JSON.stringify(r)} and page count ${pages}.`);
+      console.log(`calling success with ${JSON.stringify(data.rows)} and page count ${pages}.`);
 
-      params.successCallback(r, pages);
+      params.successCallback(data.rows, data.count);
 
 
 
@@ -84,15 +83,22 @@ export class AppComponent implements OnInit {
     this.gridApi.setDatasource(this.dataSource); // replace dataSource with your datasource
   }
 
-  async loadData(): Promise<[]> {
+  async loadData(start: number, end: number): Promise<IDataResponse> {
     let r: any;
     try {
-       r = await this.http.get('/data/ep/index').toPromise();
+       const url = `/data/ep/page?start=${start}&end=${end}`;
+       console.log(`Fetching from ${url}`);
+       r = await this.http.get(url).toPromise();
     } catch (e) {
       alert('Unable to load data.');
     }
 
-    return r as [];
+    return r as IDataResponse;
   }
 
+}
+
+interface IDataResponse {
+  rows: [];
+  count: number;
 }

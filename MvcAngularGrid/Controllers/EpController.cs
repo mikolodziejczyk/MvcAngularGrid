@@ -28,6 +28,37 @@ namespace MvcAngularGrid.Controllers
             return Content(data, "application/json");
         }
 
+        public ActionResult Page(int start, int end)
+        {
+            using (EnergyPointEntities context = new EnergyPointEntities())
+            {
+                IQueryable<Connection> query = context.Connection;
+
+                int count = query.Count();
+
+                query = query.OrderBy(x => x.Id);
+
+                var r = query.Skip(start).Take(end-start).Select(x =>
+                        new
+                        {
+                            id = x.Id,
+                            ppe = x.PPE,
+                            meterCode = x.MeterCode,
+                            name = x.Name,
+                            tariff = x.Tariff.Name,
+                            company = x.Company.Acronym,
+                            startDate = x.StartDate,
+                            endDate = x.EndDate
+                        }).ToArray();
+
+
+
+                var response = new { rows = r, count = count };
+
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         //public ActionResult Page(int first, int rows, string globalFilter, SortMeta[] multiSortMeta, IDictionary<string, FilterEntry> filters)
         //{
 
