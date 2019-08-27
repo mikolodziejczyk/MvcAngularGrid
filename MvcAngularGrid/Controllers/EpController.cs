@@ -1,4 +1,5 @@
 ﻿using EnergyPoint.Repository;
+using MvcAngularGrid.Models.AgGrid;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace MvcAngularGrid.Controllers
             return Content(data, "application/json");
         }
 
-        public ActionResult Page(int start, int end)
+        public ActionResult Page(int startRow, int endRow, SortEntry[] sortModel)
         {
             using (EnergyPointEntities context = new EnergyPointEntities())
             {
@@ -36,9 +37,45 @@ namespace MvcAngularGrid.Controllers
 
                 int count = query.Count();
 
-                query = query.OrderBy(x => x.Id);
+                if (sortModel != null)
+                {
+                    for (int i = 0; i < sortModel.Length; i++)
+                    {
+                        SortEntry sortEntry = sortModel[i];
 
-                var r = query.Skip(start).Take(end-start).Select(x =>
+                        string field = sortEntry.colId;
+                        bool isAsc = sortEntry.sort == SortEntry.asc;
+
+                        Expression<Func<Connection, object>> orderExpression;
+
+                        switch (field)
+                        {
+                            case "name": orderExpression = x => x.Name; break;
+                            case "ppe": orderExpression = x => x.PPE; break;
+                            case "meterCode": orderExpression = x => x.MeterCode; break;
+                            case "company": orderExpression = x => x.Company.Acronym; break;
+                            case "tariff": orderExpression = x => x.Tariff.Name; break;
+                            default: throw new InvalidOperationException("The column is not enabled for sorting.");
+                        }
+
+                        if (i == 0)
+                        {
+                            query = isAsc ? query.OrderBy(orderExpression) : query.OrderByDescending(orderExpression);
+                        }
+                        else
+                        {
+                            IOrderedQueryable<Connection> oq = (IOrderedQueryable<Connection>)query;
+                            query = isAsc ? oq.ThenBy(orderExpression) : oq.ThenByDescending(orderExpression);
+
+                        }
+                    }
+                }
+                else
+                {
+                    query = query.OrderBy(x => x.Name);
+                }
+
+                    var r = query.Skip(startRow).Take(endRow - startRow).Select(x =>
                         new
                         {
                             id = x.Id,

@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
       let data: IDataResponse;
 
       try {
-        data = await this.loadData(params.startRow, params.endRow);
+        data = await this.loadData(params);
       } catch (e) {
         alert('Loading error');
       }
@@ -83,12 +83,13 @@ export class AppComponent implements OnInit {
     this.gridApi.setDatasource(this.dataSource); // replace dataSource with your datasource
   }
 
-  async loadData(start: number, end: number): Promise<IDataResponse> {
+  async loadData(params: IGetRowsParams): Promise<IDataResponse> {
     let r: any;
     try {
-       const url = `/data/ep/page?start=${start}&end=${end}`;
-       console.log(`Fetching from ${url}`);
-       r = await this.http.get(url).toPromise();
+      const url = `/data/ep/page`;
+
+      console.log(`Fetching from ${url} with ${JSON.stringify(params)}`);
+      r = await this.http.post(url, params).toPromise();
     } catch (e) {
       alert('Unable to load data.');
     }
