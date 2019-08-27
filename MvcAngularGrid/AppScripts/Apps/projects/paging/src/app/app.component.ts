@@ -17,11 +17,21 @@ export class AppComponent implements OnInit {
   private gridApi;
 
   columnDefs = [
-    { headerName: 'Ppe', field: 'ppe', sortable: true, filter: true },
-    { headerName: 'CeterCode', field: 'meterCode', sortable: true, filter: true },
-    { headerName: 'Name', field: 'name', sortable: true, filter: true },
-    { headerName: 'Tariff', field: 'tariff', sortable: true, filter: true },
-    { headerName: 'Company', field: 'company', sortable: true, filter: true }
+    { headerName: 'Ppe', field: 'ppe', sortable: true,
+      filter: true,
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] } },
+    { headerName: 'CeterCode', field: 'meterCode', sortable: true,
+      filter: true,
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] }  },
+    { headerName: 'Name', field: 'name', sortable: true,
+      filter: true,
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] }  },
+    { headerName: 'Tariff', field: 'tariff', sortable: true,
+      filter: true,
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] }  },
+    { headerName: 'Company', field: 'company', sortable: true,
+      filter: true,
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] }  }
   ];
 
   rowData: any;
