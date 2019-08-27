@@ -29,11 +29,33 @@ namespace MvcAngularGrid.Controllers
             return Content(data, "application/json");
         }
 
-        public ActionResult Page(int startRow, int endRow, SortEntry[] sortModel)
+        public ActionResult Page(int startRow, int endRow, SortEntry[] sortModel, Dictionary<string, FilterEntry> filterModel)
         {
             using (EnergyPointEntities context = new EnergyPointEntities())
             {
                 IQueryable<Connection> query = context.Connection;
+
+
+                // if filters aren't posted, in filters we get values from MVC; with "action", "controller" as keys; they must be excluded, currently by their null value criterion
+                foreach (var kvp in filterModel.Where(x => x.Value != null))
+                {
+                    string field = kvp.Key;
+                    string value = kvp.Value.filter;
+
+                    Expression<Func<Connection, bool>> filterExpression;
+
+                    switch (field)
+                    {
+                        case "name": filterExpression = x => x.Name.Contains(value); break;
+                        case "ppe": filterExpression = x => x.PPE.Contains(value); break;
+                        case "meterCode": filterExpression = x => x.MeterCode.Contains(value); break;
+                        case "company": filterExpression = x => x.Company.Acronym.Contains(value); break;
+                        case "tariff": filterExpression = x => x.Tariff.Name.Contains(value); break;
+                        default: throw new InvalidOperationException("The column is not enabled for filtering.");
+                    }
+
+                    query = query.Where(filterExpression);
+                }
 
                 int count = query.Count();
 
@@ -75,18 +97,18 @@ namespace MvcAngularGrid.Controllers
                     query = query.OrderBy(x => x.Name);
                 }
 
-                    var r = query.Skip(startRow).Take(endRow - startRow).Select(x =>
-                        new
-                        {
-                            id = x.Id,
-                            ppe = x.PPE,
-                            meterCode = x.MeterCode,
-                            name = x.Name,
-                            tariff = x.Tariff.Name,
-                            company = x.Company.Acronym,
-                            startDate = x.StartDate,
-                            endDate = x.EndDate
-                        }).ToArray();
+                var r = query.Skip(startRow).Take(endRow - startRow).Select(x =>
+                    new
+                    {
+                        id = x.Id,
+                        ppe = x.PPE,
+                        meterCode = x.MeterCode,
+                        name = x.Name,
+                        tariff = x.Tariff.Name,
+                        company = x.Company.Acronym,
+                        startDate = x.StartDate,
+                        endDate = x.EndDate
+                    }).ToArray();
 
 
 

@@ -29,7 +29,9 @@ export class AppComponent implements OnInit {
   gridOptions: GridOptions = {
     // pagination: true,
     rowModelType: 'infinite',
-    cacheBlockSize: 20, // you can have your custom page size
+    cacheBlockSize: 100, // you can have your custom page size
+    maxBlocksInCache: 10,
+    blockLoadDebounceMillis: 100,
     // paginationPageSize: 20 // pagesize
   };
 
