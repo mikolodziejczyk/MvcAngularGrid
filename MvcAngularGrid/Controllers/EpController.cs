@@ -38,9 +38,11 @@ namespace MvcAngularGrid.Controllers
             { "company",  (Expression<Func<Connection, string>>)(x => x.Company.Acronym)},
             { "meterCode",  (Expression<Func<Connection, string>>)(x => x.MeterCode)},
             { "tariff",  (Expression<Func<Connection, string>>)(x => x.Tariff.Name)},
-            { "startDate", (Expression<Func<Connection, DateTime>>)(x => x.StartDate)}
-            // ,
-            // { "endDate",  x => x.EndDate}
+            { "startDate", (Expression<Func<Connection, DateTime>>)(x => x.StartDate)},
+            { "endDate",  (Expression<Func<Connection, DateTime>>)(x => x.EndDate ?? new DateTime(1990,01,01))},
+            { "orderedCapacity",  (Expression<Func<Connection, decimal>>)(x => x.OrderedCapacity ?? -1)},
+            { "endDateNullable",  (Expression<Func<Connection, DateTime?>>)(x => x.EndDate)},
+            { "orderedCapacityNullable",  (Expression<Func<Connection, decimal?>>)(x => x.OrderedCapacity)}
         };
 
         public ActionResult Page(int startRow, int endRow, SortEntry[] sortModel, Dictionary<string, FilterEntry> filterModel)
@@ -120,7 +122,10 @@ namespace MvcAngularGrid.Controllers
                         tariff = x.Tariff.Name,
                         company = x.Company.Acronym,
                         startDate = x.StartDate,
-                        endDate = x.EndDate
+                        endDate = x.EndDate,
+                        orderedCapacity = x.OrderedCapacity,
+                        endDateNullable = x.EndDate,
+                        orderedCapacityNullable = x.OrderedCapacity
                     }).ToArray();
 
 
@@ -140,6 +145,11 @@ namespace MvcAngularGrid.Controllers
                 r = ApplyOrderBy(query, (Expression<Func<TSource, DateTime>>)orderExpression, isAsc, isFirst);
             }
 
+            if (orderExpression.Body.Type == typeof(DateTime?))
+            {
+                r = ApplyOrderBy(query, (Expression<Func<TSource, DateTime?>>)orderExpression, isAsc, isFirst);
+            }
+
             if (orderExpression.Body.Type == typeof(String))
             {
                 r = ApplyOrderBy(query, (Expression<Func<TSource, String>>)orderExpression, isAsc, isFirst);
@@ -149,6 +159,22 @@ namespace MvcAngularGrid.Controllers
             {
                 r = ApplyOrderBy(query, (Expression<Func<TSource, Decimal>>)orderExpression, isAsc, isFirst);
             }
+
+            if (orderExpression.Body.Type == typeof(Decimal?))
+            {
+                r = ApplyOrderBy(query, (Expression<Func<TSource, Decimal?>>)orderExpression, isAsc, isFirst);
+            }
+
+            if (orderExpression.Body.Type == typeof(int))
+            {
+                r = ApplyOrderBy(query, (Expression<Func<TSource, int>>)orderExpression, isAsc, isFirst);
+            }
+
+            if (orderExpression.Body.Type == typeof(int?))
+            {
+                r = ApplyOrderBy(query, (Expression<Func<TSource, int?>>)orderExpression, isAsc, isFirst);
+            }
+
 
             if (r == null)
             {

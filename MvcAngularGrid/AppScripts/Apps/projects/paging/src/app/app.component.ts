@@ -34,6 +34,18 @@ export class AppComponent implements OnInit {
       filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }  },
     { headerName: 'Start date', field: 'startDate', sortable: true,
       filter: 'agDateColumnFilter',
+      filterParams: { suppressAndOrCondition: true }  },
+    { headerName: 'End date', field: 'endDate', sortable: true,
+      filter: 'agDateColumnFilter',
+      filterParams: { suppressAndOrCondition: true }  },
+    { headerName: 'Ordered capacity', field: 'orderedCapacity', sortable: true,
+      filter: 'agNumberColumnFilter',
+      filterParams: { suppressAndOrCondition: true }  },
+    { headerName: 'End date nullable', field: 'endDateNullable', sortable: true,
+      filter: 'agDateColumnFilter',
+      filterParams: { suppressAndOrCondition: true }  },
+    { headerName: 'Ordered capacity nullable', field: 'orderedCapacityNullable', sortable: true,
+      filter: 'agNumberColumnFilter',
       filterParams: { suppressAndOrCondition: true }  }
   ];
 
