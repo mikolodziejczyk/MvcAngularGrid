@@ -30,6 +30,15 @@ namespace MvcAngularGrid.Controllers
             return Content(data, "application/json");
         }
 
+        IDictionary<string, Expression<Func<Connection, object>>> columnSource = new Dictionary<string, Expression<Func<Connection, object>>>()
+        {
+            { "name",  x => x.Name},
+            { "ppe",  x => x.PPE},
+            { "company",  x => x.Company.Acronym},
+            { "meterCode",  x => x.MeterCode},
+            { "tariff",  x => x.Tariff.Name},
+        };
+
         public ActionResult Page(int startRow, int endRow, SortEntry[] sortModel, Dictionary<string, FilterEntry> filterModel)
         {
             using (EnergyPointEntities context = new EnergyPointEntities())
@@ -43,23 +52,21 @@ namespace MvcAngularGrid.Controllers
                     string field = kvp.Key;
                     string value = kvp.Value.filter;
 
-                    Expression<Func<Connection, bool>> filterExpression;
+                    Expression<Func<Connection, object>> columnExpression = columnSource[field];
 
-                    Expression<Func<Connection, string>> stringPropertyExpression = null;
-
-                    switch (field)
-                    {
-                        case "name": stringPropertyExpression = x => x.Name; break;
-                        case "ppe": stringPropertyExpression = x => x.PPE; break;
-                        case "meterCode": stringPropertyExpression = x => x.MeterCode; break;
-                        case "company": stringPropertyExpression = x => x.Company.Acronym; break;
-                        case "tariff": stringPropertyExpression = x => x.Tariff.Name; break;
-                        default: throw new InvalidOperationException("The column is not enabled for sorting.");
-                    }
+                    //switch (field)
+                    //{
+                    //    case "name": stringPropertyExpression = x => x.Name; break;
+                    //    case "ppe": stringPropertyExpression = x => x.PPE; break;
+                    //    case "meterCode": stringPropertyExpression = x => x.MeterCode; break;
+                    //    case "company": stringPropertyExpression = x => x.Company.Acronym; break;
+                    //    case "tariff": stringPropertyExpression = x => x.Tariff.Name; break;
+                    //    default: throw new InvalidOperationException("The column is not enabled for sorting.");
+                    //}
 
                     MethodInfo method = typeof(String).GetMethod("Contains");
-                    var callExpression = Expression.Call(stringPropertyExpression.Body, method, Expression.Constant(value));
-                    filterExpression = Expression.Lambda<Func<Connection, bool>>(callExpression, stringPropertyExpression.Parameters.First());
+                    var callExpression = Expression.Call(columnExpression.Body, method, Expression.Constant(value));
+                    Expression<Func<Connection, bool>> filterExpression = Expression.Lambda<Func<Connection, bool>>(callExpression, columnExpression.Parameters.First());
 
                     query = query.Where(filterExpression);
                 }
@@ -75,17 +82,17 @@ namespace MvcAngularGrid.Controllers
                         string field = sortEntry.colId;
                         bool isAsc = sortEntry.sort == SortEntry.asc;
 
-                        Expression<Func<Connection, object>> orderExpression;
+                        Expression<Func<Connection, object>> orderExpression = columnSource[field];
 
-                        switch (field)
-                        {
-                            case "name": orderExpression = x => x.Name; break;
-                            case "ppe": orderExpression = x => x.PPE; break;
-                            case "meterCode": orderExpression = x => x.MeterCode; break;
-                            case "company": orderExpression = x => x.Company.Acronym; break;
-                            case "tariff": orderExpression = x => x.Tariff.Name; break;
-                            default: throw new InvalidOperationException("The column is not enabled for sorting.");
-                        }
+                        //switch (field)
+                        //{
+                        //    case "name": orderExpression = x => x.Name; break;
+                        //    case "ppe": orderExpression = x => x.PPE; break;
+                        //    case "meterCode": orderExpression = x => x.MeterCode; break;
+                        //    case "company": orderExpression = x => x.Company.Acronym; break;
+                        //    case "tariff": orderExpression = x => x.Tariff.Name; break;
+                        //    default: throw new InvalidOperationException("The column is not enabled for sorting.");
+                        //}
 
                         if (i == 0)
                         {
