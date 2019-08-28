@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 
@@ -44,15 +45,21 @@ namespace MvcAngularGrid.Controllers
 
                     Expression<Func<Connection, bool>> filterExpression;
 
+                    Expression<Func<Connection, string>> stringPropertyExpression = null;
+
                     switch (field)
                     {
-                        case "name": filterExpression = x => x.Name.Contains(value); break;
-                        case "ppe": filterExpression = x => x.PPE.Contains(value); break;
-                        case "meterCode": filterExpression = x => x.MeterCode.Contains(value); break;
-                        case "company": filterExpression = x => x.Company.Acronym.Contains(value); break;
-                        case "tariff": filterExpression = x => x.Tariff.Name.Contains(value); break;
-                        default: throw new InvalidOperationException("The column is not enabled for filtering.");
+                        case "name": stringPropertyExpression = x => x.Name; break;
+                        case "ppe": stringPropertyExpression = x => x.PPE; break;
+                        case "meterCode": stringPropertyExpression = x => x.MeterCode; break;
+                        case "company": stringPropertyExpression = x => x.Company.Acronym; break;
+                        case "tariff": stringPropertyExpression = x => x.Tariff.Name; break;
+                        default: throw new InvalidOperationException("The column is not enabled for sorting.");
                     }
+
+                    MethodInfo method = typeof(String).GetMethod("Contains");
+                    var callExpression = Expression.Call(stringPropertyExpression.Body, method, Expression.Constant(value));
+                    filterExpression = Expression.Lambda<Func<Connection, bool>>(callExpression, stringPropertyExpression.Parameters.First());
 
                     query = query.Where(filterExpression);
                 }
