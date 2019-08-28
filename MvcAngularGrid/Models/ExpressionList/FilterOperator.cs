@@ -8,7 +8,9 @@ namespace MvcAngularGrid.Models.ExpressionList
     public enum FilterOperator
     {
         Contains,
+        NotContains,
         Equals,
+        NotEquals,
         StartsWith
     }
 }

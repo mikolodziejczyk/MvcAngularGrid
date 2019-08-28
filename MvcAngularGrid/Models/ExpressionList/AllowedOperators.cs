@@ -7,7 +7,7 @@ namespace MvcAngularGrid.Models.ExpressionList
 {
     public static class AllowedOperators
     {
-        public static FilterOperator[] OperatorsAllowedForString = new FilterOperator[] { FilterOperator.Contains, FilterOperator.Equals, FilterOperator.StartsWith };
+        public static FilterOperator[] OperatorsAllowedForString = new FilterOperator[] { FilterOperator.Contains, FilterOperator.Equals, FilterOperator.NotContains, FilterOperator.NotEquals, FilterOperator.StartsWith };
 
         public static bool IsOperatorAllowedForString(FilterOperator filterOperator)
         {

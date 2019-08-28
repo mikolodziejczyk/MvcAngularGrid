@@ -19,19 +19,19 @@ export class AppComponent implements OnInit {
   columnDefs = [
     { headerName: 'Ppe', field: 'ppe', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'startsWith'] } },
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] } },
     { headerName: 'CeterCode', field: 'meterCode', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] }  },
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }  },
     { headerName: 'Name', field: 'name', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] }  },
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }  },
     { headerName: 'Tariff', field: 'tariff', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] }  },
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual']  } },
     { headerName: 'Company', field: 'company', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'startsWith'] }  }
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }  }
   ];
 
   rowData: any;

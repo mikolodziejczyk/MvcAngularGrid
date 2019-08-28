@@ -11,8 +11,10 @@ namespace MvcAngularGrid.Models.AgGrid
         public static IDictionary<string, FilterOperator> filterOperators = new Dictionary<string, FilterOperator>(StringComparer.InvariantCultureIgnoreCase)
         {
             { "contains", FilterOperator.Contains },
+            { "notContains", FilterOperator.NotContains },
             { "startsWith", FilterOperator.StartsWith },
             { "equals", FilterOperator.Equals },
+            { "notEqual", FilterOperator.NotEquals },
         };
     }
 }

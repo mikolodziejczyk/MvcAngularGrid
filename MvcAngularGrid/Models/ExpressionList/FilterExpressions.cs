@@ -15,15 +15,34 @@ namespace MvcAngularGrid.Models.ExpressionList
         public static Expression<Func<T, bool>> Contains(Expression<Func<T, object>> columnExpression, string value)
         {
             var callExpression = Expression.Call(columnExpression.Body, containsMethod, Expression.Constant(value));
-            Expression<Func<T, bool>> filterExpression = Expression.Lambda<Func<T, bool>>(callExpression, columnExpression.Parameters.First());
-            return filterExpression;
+            return MakeFilterExpression(callExpression, columnExpression);
+        }
+
+        public static Expression<Func<T, bool>> NotContains(Expression<Func<T, object>> columnExpression, string value)
+        {
+            var callExpression = Expression.Call(columnExpression.Body, containsMethod, Expression.Constant(value));
+            var innerExpression = Expression.Not(callExpression);
+            return MakeFilterExpression(innerExpression, columnExpression);
         }
 
         public static Expression<Func<T, bool>> StartsWith(Expression<Func<T, object>> columnExpression, string value)
         {
             var callExpression = Expression.Call(columnExpression.Body, startsWithMethod, Expression.Constant(value));
-            Expression<Func<T, bool>> filterExpression = Expression.Lambda<Func<T, bool>>(callExpression, columnExpression.Parameters.First());
-            return filterExpression;
+            return MakeFilterExpression(callExpression, columnExpression);
+        }
+
+        public static Expression<Func<T, bool>> Equal(Expression<Func<T, object>> columnExpression, string value)
+        {
+            var innerExpression = Expression.Equal(columnExpression.Body, Expression.Constant(value));
+            return MakeFilterExpression(innerExpression, columnExpression);
+        }
+
+
+        public static Expression<Func<T, bool>> NotEqual(Expression<Func<T, object>> columnExpression, string value)
+        {
+            var innerExpression = Expression.Equal(columnExpression.Body, Expression.Constant(value));
+            var notInnerExpression = Expression.Not(innerExpression);
+            return MakeFilterExpression(notInnerExpression, columnExpression);
         }
 
         public static Expression<Func<T, bool>> GetFilterExpression(Expression<Func<T, object>> columnExpression, string value, FilterOperator filterOperator)
@@ -40,11 +59,26 @@ namespace MvcAngularGrid.Models.ExpressionList
             {
                 if (filterOperator == FilterOperator.Contains) r = Contains(columnExpression, value);
                 if (filterOperator == FilterOperator.StartsWith) r = StartsWith(columnExpression, value);
+                if (filterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
+                if (filterOperator == FilterOperator.NotContains) r = NotContains(columnExpression, value);
+                if (filterOperator == FilterOperator.NotEquals) r = NotEqual(columnExpression, value);
             }
 
             if (r == null) throw new InvalidOperationException((String.Format("Unsupported operator {0}.", filterOperator)));
 
             return r;
+        }
+
+
+        /// <summary>
+        /// Simple helper, creates an Expression[Func[T, bool]] from a given inner expression and the column expression. This is to avoid repetitive code.
+        /// </summary>
+        /// <param name="innerExpression"></param>
+        /// <param name="columnExpression"></param>
+        /// <returns></returns>
+        private static Expression<Func<T, bool>> MakeFilterExpression(Expression innerExpression, Expression<Func<T, object>> columnExpression)
+        {
+            return Expression.Lambda<Func<T, bool>>(innerExpression, columnExpression.Parameters.First());
         }
     }
 }
