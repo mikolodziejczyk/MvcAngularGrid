@@ -1,5 +1,4 @@
-﻿using EnergyPoint.Repository;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,28 +7,28 @@ using System.Web;
 
 namespace MvcAngularGrid.Models.ExpressionList
 {
-    public class FilterExpressions
+    public class FilterExpressions<T>
     {
         static MethodInfo containsMethod = typeof(String).GetMethod("Contains");
         static MethodInfo startsWithMethod = typeof(String).GetMethod("StartsWith", new Type[] { typeof(string) });
 
-        public static Expression<Func<Connection, bool>> Contains(Expression<Func<Connection, object>> columnExpression, string value)
+        public static Expression<Func<T, bool>> Contains(Expression<Func<T, object>> columnExpression, string value)
         {
             var callExpression = Expression.Call(columnExpression.Body, containsMethod, Expression.Constant(value));
-            Expression<Func<Connection, bool>> filterExpression = Expression.Lambda<Func<Connection, bool>>(callExpression, columnExpression.Parameters.First());
+            Expression<Func<T, bool>> filterExpression = Expression.Lambda<Func<T, bool>>(callExpression, columnExpression.Parameters.First());
             return filterExpression;
         }
 
-        public static Expression<Func<Connection, bool>> StartsWith(Expression<Func<Connection, object>> columnExpression, string value)
+        public static Expression<Func<T, bool>> StartsWith(Expression<Func<T, object>> columnExpression, string value)
         {
             var callExpression = Expression.Call(columnExpression.Body, startsWithMethod, Expression.Constant(value));
-            Expression<Func<Connection, bool>> filterExpression = Expression.Lambda<Func<Connection, bool>>(callExpression, columnExpression.Parameters.First());
+            Expression<Func<T, bool>> filterExpression = Expression.Lambda<Func<T, bool>>(callExpression, columnExpression.Parameters.First());
             return filterExpression;
         }
 
-        public static Expression<Func<Connection, bool>> GetFilterExpression(Expression<Func<Connection, object>> columnExpression, string value, FilterOperator filterOperator)
+        public static Expression<Func<T, bool>> GetFilterExpression(Expression<Func<T, object>> columnExpression, string value, FilterOperator filterOperator)
         {
-            Expression<Func<Connection, bool>> r = null;
+            Expression<Func<T, bool>> r = null;
             Type columnType = columnExpression.Body.Type;
 
             if (AllowedOperators.IsOperatorAllowedForType(filterOperator, columnType) == false)

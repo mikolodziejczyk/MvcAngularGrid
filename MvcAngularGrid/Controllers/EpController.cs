@@ -71,7 +71,7 @@ namespace MvcAngularGrid.Controllers
 
                     FilterOperator filterOperator = FilterOperatorParser.filterOperators[kvp.Value.@type];
 
-                    Expression<Func<Connection, bool>> filterExpression = FilterExpressions.GetFilterExpression(columnExpression, value, filterOperator);
+                    Expression<Func<Connection, bool>> filterExpression = FilterExpressions<Connection>.GetFilterExpression(columnExpression, value, filterOperator);
 
                     query = query.Where(filterExpression);
                 }
