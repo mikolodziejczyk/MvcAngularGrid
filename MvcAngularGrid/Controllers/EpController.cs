@@ -1,5 +1,6 @@
 ﻿using EnergyPoint.Repository;
 using MvcAngularGrid.Models.AgGrid;
+using MvcAngularGrid.Models.ExpressionList;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -64,9 +65,13 @@ namespace MvcAngularGrid.Controllers
                     //    default: throw new InvalidOperationException("The column is not enabled for sorting.");
                     //}
 
-                    MethodInfo method = typeof(String).GetMethod("Contains");
-                    var callExpression = Expression.Call(columnExpression.Body, method, Expression.Constant(value));
-                    Expression<Func<Connection, bool>> filterExpression = Expression.Lambda<Func<Connection, bool>>(callExpression, columnExpression.Parameters.First());
+                    //MethodInfo method = typeof(String).GetMethod("Contains");
+                    //var callExpression = Expression.Call(columnExpression.Body, method, Expression.Constant(value));
+                    //Expression<Func<Connection, bool>> filterExpression = Expression.Lambda<Func<Connection, bool>>(callExpression, columnExpression.Parameters.First());
+
+                    FilterOperator filterOperator = FilterOperatorParser.filterOperators[kvp.Value.@type];
+
+                    Expression<Func<Connection, bool>> filterExpression = FilterExpressions.GetFilterExpression(columnExpression, value, filterOperator);
 
                     query = query.Where(filterExpression);
                 }

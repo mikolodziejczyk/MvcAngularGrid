@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   columnDefs = [
     { headerName: 'Ppe', field: 'ppe', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] } },
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'startsWith'] } },
     { headerName: 'CeterCode', field: 'meterCode', sortable: true,
       filter: true,
       filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] }  },
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
       filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] }  },
     { headerName: 'Company', field: 'company', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains'] }  }
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'startsWith'] }  }
   ];
 
   rowData: any;

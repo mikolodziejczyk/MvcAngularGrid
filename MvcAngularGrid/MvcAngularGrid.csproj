@@ -144,7 +144,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AgGrid\FilterEntry.cs" />
+    <Compile Include="Models\AgGrid\FilterOperatorParser.cs" />
     <Compile Include="Models\AgGrid\SortEntry.cs" />
+    <Compile Include="Models\ExpressionList\AllowedOperators.cs" />
+    <Compile Include="Models\ExpressionList\FilterExpressions.cs" />
+    <Compile Include="Models\ExpressionList\FilterOperator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
