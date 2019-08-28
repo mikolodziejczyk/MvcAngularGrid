@@ -31,13 +31,16 @@ namespace MvcAngularGrid.Controllers
             return Content(data, "application/json");
         }
 
-        IDictionary<string, Expression<Func<Connection, object>>> columnSource = new Dictionary<string, Expression<Func<Connection, object>>>()
+        IDictionary<string, LambdaExpression> columnSource = new Dictionary<string, LambdaExpression>()
         {
-            { "name",  x => x.Name},
-            { "ppe",  x => x.PPE},
-            { "company",  x => x.Company.Acronym},
-            { "meterCode",  x => x.MeterCode},
-            { "tariff",  x => x.Tariff.Name},
+            { "name", (Expression<Func<Connection, string>>)(x => x.Name)},
+            { "ppe",  (Expression<Func<Connection, string>>)(x => x.PPE)},
+            { "company",  (Expression<Func<Connection, string>>)(x => x.Company.Acronym)},
+            { "meterCode",  (Expression<Func<Connection, string>>)(x => x.MeterCode)},
+            { "tariff",  (Expression<Func<Connection, string>>)(x => x.Tariff.Name)},
+            { "startDate", (Expression<Func<Connection, DateTime>>)(x => x.StartDate)}
+            // ,
+            // { "endDate",  x => x.EndDate}
         };
 
         public ActionResult Page(int startRow, int endRow, SortEntry[] sortModel, Dictionary<string, FilterEntry> filterModel)
@@ -53,7 +56,7 @@ namespace MvcAngularGrid.Controllers
                     string field = kvp.Key;
                     string value = kvp.Value.filter;
 
-                    Expression<Func<Connection, object>> columnExpression = columnSource[field];
+                    LambdaExpression columnExpression = columnSource[field];
 
                     FilterOperator filterOperator = FilterOperatorParser.filterOperators[kvp.Value.@type];
 
@@ -72,8 +75,13 @@ namespace MvcAngularGrid.Controllers
 
                         string field = sortEntry.colId;
                         bool isAsc = sortEntry.sort == SortEntry.asc;
+                        bool isFirst = i == 0;
 
-                        Expression<Func<Connection, object>> orderExpression = columnSource[field];
+                        LambdaExpression lambdaExpression = columnSource[field];
+
+                        query = ApplyOrderByFromLambda(query, lambdaExpression, isAsc, isFirst);
+
+                        // LambdaExpression orderExpression = columnSource[field];
 
                         //switch (field)
                         //{
@@ -85,16 +93,16 @@ namespace MvcAngularGrid.Controllers
                         //    default: throw new InvalidOperationException("The column is not enabled for sorting.");
                         //}
 
-                        if (i == 0)
-                        {
-                            query = isAsc ? query.OrderBy(orderExpression) : query.OrderByDescending(orderExpression);
-                        }
-                        else
-                        {
-                            IOrderedQueryable<Connection> oq = (IOrderedQueryable<Connection>)query;
-                            query = isAsc ? oq.ThenBy(orderExpression) : oq.ThenByDescending(orderExpression);
+                        //if (i == 0)
+                        //{
+                        //    query = isAsc ? query.OrderBy(orderExpression) : query.OrderByDescending(orderExpression);
+                        //}
+                        //else
+                        //{
+                        //    IOrderedQueryable<Connection> oq = (IOrderedQueryable<Connection>)query;
+                        //    query = isAsc ? oq.ThenBy(orderExpression) : oq.ThenByDescending(orderExpression);
 
-                        }
+                        //}
                     }
                 }
                 else
@@ -119,8 +127,52 @@ namespace MvcAngularGrid.Controllers
 
                 var response = new { rows = r, count = count };
 
-                return Json(response, JsonRequestBehavior.AllowGet);
+                return new JsonNetResult(response);
             }
+        }
+
+        IOrderedQueryable<TSource> ApplyOrderByFromLambda<TSource>(IQueryable<TSource> query, LambdaExpression orderExpression, bool isAsc, bool isFirst)
+        {
+            IOrderedQueryable<TSource> r = null;
+
+            if (orderExpression.Body.Type == typeof(DateTime))
+            {
+                r = ApplyOrderBy(query, (Expression<Func<TSource, DateTime>>)orderExpression, isAsc, isFirst);
+            }
+
+            if (orderExpression.Body.Type == typeof(String))
+            {
+                r = ApplyOrderBy(query, (Expression<Func<TSource, String>>)orderExpression, isAsc, isFirst);
+            }
+
+            if (orderExpression.Body.Type == typeof(Decimal))
+            {
+                r = ApplyOrderBy(query, (Expression<Func<TSource, Decimal>>)orderExpression, isAsc, isFirst);
+            }
+
+            if (r == null)
+            {
+                throw new InvalidOperationException(String.Format("The LambdaExpression body type {0} is not supported here.", orderExpression.Body.Type));
+            }
+
+            return r;
+        }
+
+        IOrderedQueryable<TSource> ApplyOrderBy<TSource, TKey>(IQueryable<TSource> query, Expression<Func<TSource, TKey>> orderExpression, bool isAsc, bool isFirst)
+        {
+            IOrderedQueryable<TSource> r;
+
+            if (isFirst)
+            {
+                r = isAsc ? query.OrderBy(orderExpression) : query.OrderByDescending(orderExpression);
+            }
+            else
+            {
+                IOrderedQueryable<TSource> oq = (IOrderedQueryable<TSource>)query;
+                r = isAsc ? oq.ThenBy(orderExpression) : oq.ThenByDescending(orderExpression);
+            }
+
+            return r;
         }
 
 

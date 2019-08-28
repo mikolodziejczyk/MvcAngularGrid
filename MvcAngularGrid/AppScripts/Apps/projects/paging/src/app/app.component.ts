@@ -31,7 +31,10 @@ export class AppComponent implements OnInit {
       filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual']  } },
     { headerName: 'Company', field: 'company', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }  }
+      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }  },
+    { headerName: 'Start date', field: 'startDate', sortable: true,
+      filter: 'agDateColumnFilter',
+      filterParams: { suppressAndOrCondition: true }  }
   ];
 
   rowData: any;
