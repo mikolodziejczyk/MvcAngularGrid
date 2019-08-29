@@ -32,6 +32,15 @@ namespace MvcAngularGrid.Models.AgGrid
                         r.SecondValue = DateTime.ParseExact(filterEntry.dateTo, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                     }
                 }
+
+                if (filterEntry.filterType == "number")
+                {
+                    r.FirstValue = double.Parse(filterEntry.filter, CultureInfo.InvariantCulture);
+                    if (String.IsNullOrEmpty(filterEntry.filterTo) == false)
+                    {
+                        r.SecondValue = double.Parse(filterEntry.filterTo, CultureInfo.InvariantCulture);
+                    }
+                }
             }
             catch (Exception e)
             {

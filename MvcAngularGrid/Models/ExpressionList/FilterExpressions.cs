@@ -33,46 +33,46 @@ namespace MvcAngularGrid.Models.ExpressionList
 
         public static Expression<Func<T, bool>> Equal(LambdaExpression columnExpression, object value)
         {
-            var innerExpression = Expression.Equal(columnExpression.Body, Expression.Constant(value));
+            var innerExpression = Expression.Equal(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
             return MakeFilterExpression(innerExpression, columnExpression);
         }
 
 
         public static Expression<Func<T, bool>> NotEqual(LambdaExpression columnExpression, object value)
         {
-            var innerExpression = Expression.Equal(columnExpression.Body, Expression.Constant(value));
+            var innerExpression = Expression.Equal(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
             var notInnerExpression = Expression.Not(innerExpression);
             return MakeFilterExpression(notInnerExpression, columnExpression);
         }
 
         public static Expression<Func<T, bool>> GreaterThan(LambdaExpression columnExpression, object value)
         {
-            var innerExpression = Expression.GreaterThan(columnExpression.Body, Expression.Constant(value));
+            var innerExpression = Expression.GreaterThan(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
             return MakeFilterExpression(innerExpression, columnExpression);
         }
 
         public static Expression<Func<T, bool>> GreaterThanOrEqual(LambdaExpression columnExpression, object value)
         {
-            var innerExpression = Expression.GreaterThanOrEqual(columnExpression.Body, Expression.Constant(value));
+            var innerExpression = Expression.GreaterThanOrEqual(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
             return MakeFilterExpression(innerExpression, columnExpression);
         }
 
         public static Expression<Func<T, bool>> LessThan(LambdaExpression columnExpression, object value)
         {
-            var innerExpression = Expression.LessThan(columnExpression.Body, Expression.Constant(value));
+            var innerExpression = Expression.LessThan(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
             return MakeFilterExpression(innerExpression, columnExpression);
         }
 
         public static Expression<Func<T, bool>> LessThanOrEqual(LambdaExpression columnExpression, object value)
         {
-            var innerExpression = Expression.LessThanOrEqual(columnExpression.Body, Expression.Constant(value));
+            var innerExpression = Expression.LessThanOrEqual(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
             return MakeFilterExpression(innerExpression, columnExpression);
         }
 
         public static Expression<Func<T, bool>> InRange(LambdaExpression columnExpression, object valueA, object valueB)
         {
-            var a = Expression.GreaterThanOrEqual(columnExpression.Body, Expression.Constant(valueA));
-            var b = Expression.LessThanOrEqual(columnExpression.Body, Expression.Constant(valueB));
+            var a = Expression.GreaterThanOrEqual(columnExpression.Body, Expression.Constant(valueA, columnExpression.ReturnType));
+            var b = Expression.LessThanOrEqual(columnExpression.Body, Expression.Constant(valueB, columnExpression.ReturnType));
             var innerExpression = Expression.And(a, b);
             return MakeFilterExpression(innerExpression, columnExpression);
         }
@@ -98,9 +98,9 @@ namespace MvcAngularGrid.Models.ExpressionList
                 if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) r = NotEqual(columnExpression, value);
             }
 
-            if (columnType == typeof(DateTime))
+            if (columnType == typeof(DateTime) || columnType == typeof(DateTime?))
             {
-                DateTime value = (DateTime)universalFilterEntry.FirstValue;
+                object value = (object)universalFilterEntry.FirstValue;
 
                 if (universalFilterEntry.FilterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
                 if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) r = NotEqual(columnExpression, value);
@@ -109,7 +109,42 @@ namespace MvcAngularGrid.Models.ExpressionList
 
                 if (universalFilterEntry.FilterOperator == FilterOperator.InRange)
                 {
-                    DateTime secondValue = (DateTime)universalFilterEntry.SecondValue;
+                    object secondValue = (object)universalFilterEntry.SecondValue;
+
+                    r = InRange(columnExpression, value, secondValue);
+                }
+
+            }
+
+            if (columnType == typeof(int) || columnType == typeof(int?) || columnType == typeof(decimal) || columnType == typeof(decimal?) || columnType == typeof(double) || columnType == typeof(double?))
+            {
+                object value = (object)universalFilterEntry.FirstValue;
+
+                // Different number types can be converted directly to another
+                // However, we cannot convert them directly to a another nullable, e.g. we cannot convert double => Nullable<decimal> with Convert.ChangeType()
+                // Therefore, if the column is nullable, we need to find the base type (e.g. Nullable<decimal> => decimal), then convert to this type with Convert.ChangeType()
+                // Converting to Nullable<decimal> is not required at this point, it will be handled in the method producing expression.
+
+                Type nonNullableColumnType = columnType;
+
+                if (columnType.IsValueType && columnType.IsGenericType && columnType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    nonNullableColumnType = columnType.GenericTypeArguments[0];
+                }
+
+                value = Convert.ChangeType(value, nonNullableColumnType);
+
+                if (universalFilterEntry.FilterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) r = NotEqual(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.GreaterThan) r = GreaterThan(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.GreaterThanOrEqual) r = GreaterThanOrEqual(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.LessThan) r = LessThan(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.LessThanOrEqual) r = LessThanOrEqual(columnExpression, value);
+
+                if (universalFilterEntry.FilterOperator == FilterOperator.InRange)
+                {
+                    object secondValue = (object)universalFilterEntry.SecondValue;
+                    secondValue = Convert.ChangeType(secondValue, nonNullableColumnType);
                     r = InRange(columnExpression, value, secondValue);
                 }
 

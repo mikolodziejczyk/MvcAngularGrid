@@ -36,12 +36,12 @@ namespace MvcAngularGrid.Models.ExpressionList
                 r = IsOperatorAllowedForString(filterOperator);
             }
 
-            if (type == typeof(DateTime))
+            if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
                 r = IsOperatorAllowedForDate(filterOperator);
             }
 
-            if (type == typeof(Decimal) || type == typeof(int))
+            if (type == typeof(Decimal) || type == typeof(Decimal?) || type == typeof(int) || type == typeof(int?) || type == typeof(double) || type == typeof(double?))
             {
                 r = IsOperatorAllowedForNumber(filterOperator);
             }
