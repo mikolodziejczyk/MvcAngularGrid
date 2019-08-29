@@ -61,8 +61,8 @@ namespace MvcAngularGrid.Controllers
                     LambdaExpression columnExpression = columnSource[field];
 
                     // FilterOperator filterOperator = FilterOperatorParser.filterOperators[kvp.Value.@type];
-                    FilterEntryConverter filterEntryConverter = new FilterEntryConverter();
-                    UniversalFilterEntry universalFilterEntry = filterEntryConverter.Convert(kvp.Value);
+                    UniversalFilterEntry universalFilterEntry = FilterEntryConverter.Convert(kvp.Value);
+                    if (universalFilterEntry == null) continue;
 
                     Expression<Func<Connection, bool>> filterExpression = FilterExpressions<Connection>.GetFilterExpression(columnExpression, universalFilterEntry);
 

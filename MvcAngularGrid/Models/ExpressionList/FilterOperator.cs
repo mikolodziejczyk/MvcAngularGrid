@@ -10,7 +10,7 @@ namespace MvcAngularGrid.Models.ExpressionList
         Contains,
         NotContains,
         Equals,
-        NotEquals,
+        NotEqual,
         StartsWith,
         LessThan,
         LessThanOrEqual,

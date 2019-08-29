@@ -9,33 +9,41 @@ namespace MvcAngularGrid.Models.AgGrid
 {
     public class FilterEntryConverter
     {
-        public UniversalFilterEntry Convert(FilterEntry filterEntry)
+        static public UniversalFilterEntry Convert(FilterEntry filterEntry)
         {
             UniversalFilterEntry r = new UniversalFilterEntry();
 
             r.FilterOperator = FilterOperatorParser.filterOperators[filterEntry.type];
 
-            if (filterEntry.filterType == "text")
+            try
             {
-                r.FirstValue = filterEntry.filter;
-                r.SecondValue = null;
-            }
 
-            if (filterEntry.filterType == "date")
-            {
-                r.FirstValue = DateTime.ParseExact(filterEntry.dateFrom, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                if (String.IsNullOrEmpty(filterEntry.dateTo) == false)
+                if (filterEntry.filterType == "text")
                 {
-                    r.SecondValue = DateTime.ParseExact(filterEntry.dateTo, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    r.FirstValue = filterEntry.filter;
+                    r.SecondValue = null;
                 }
+
+                if (filterEntry.filterType == "date")
+                {
+                    r.FirstValue = DateTime.ParseExact(filterEntry.dateFrom, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    if (String.IsNullOrEmpty(filterEntry.dateTo) == false)
+                    {
+                        r.SecondValue = DateTime.ParseExact(filterEntry.dateTo, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                r = null;
             }
 
             return r;
         }
 
-        public UniversalFilterEntry[] ConvertSequence(FilterEntry[] filterEntries)
+        static public UniversalFilterEntry[] ConvertSequence(FilterEntry[] filterEntries)
         {
-            return filterEntries.Select(x => Convert(x)).ToArray();
+            return filterEntries.Select(x => Convert(x)).Where(x=>x != null).ToArray();
         }
     }
 }

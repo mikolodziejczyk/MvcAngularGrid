@@ -95,7 +95,7 @@ namespace MvcAngularGrid.Models.ExpressionList
                 if (universalFilterEntry.FilterOperator == FilterOperator.StartsWith) r = StartsWith(columnExpression, value);
                 if (universalFilterEntry.FilterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
                 if (universalFilterEntry.FilterOperator == FilterOperator.NotContains) r = NotContains(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.NotEquals) r = NotEqual(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) r = NotEqual(columnExpression, value);
             }
 
             if (columnType == typeof(DateTime))
@@ -103,7 +103,7 @@ namespace MvcAngularGrid.Models.ExpressionList
                 DateTime value = (DateTime)universalFilterEntry.FirstValue;
 
                 if (universalFilterEntry.FilterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.NotEquals) r = NotEqual(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) r = NotEqual(columnExpression, value);
                 if (universalFilterEntry.FilterOperator == FilterOperator.GreaterThan) r = GreaterThan(columnExpression, value);
                 if (universalFilterEntry.FilterOperator == FilterOperator.LessThan) r = LessThan(columnExpression, value);
 
