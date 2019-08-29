@@ -35,10 +35,10 @@ namespace MvcAngularGrid.Models.AgGrid
 
                 if (filterEntry.filterType == "number")
                 {
-                    r.FirstValue = double.Parse(filterEntry.filter, CultureInfo.InvariantCulture);
+                    r.FirstValue = double.Parse(filterEntry.filter, CultureInfo.CurrentCulture);
                     if (String.IsNullOrEmpty(filterEntry.filterTo) == false)
                     {
-                        r.SecondValue = double.Parse(filterEntry.filterTo, CultureInfo.InvariantCulture);
+                        r.SecondValue = double.Parse(filterEntry.filterTo, CultureInfo.CurrentCulture);
                     }
                 }
             }
