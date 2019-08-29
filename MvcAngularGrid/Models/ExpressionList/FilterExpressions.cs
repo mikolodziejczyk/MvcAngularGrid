@@ -11,75 +11,78 @@ namespace MvcAngularGrid.Models.ExpressionList
     {
         static MethodInfo containsMethod = typeof(String).GetMethod("Contains");
         static MethodInfo startsWithMethod = typeof(String).GetMethod("StartsWith", new Type[] { typeof(string) });
+        // all entity column types for which numeric filter should be used
+        static HashSet<Type> numericTypes = new HashSet<Type>() { typeof(int), typeof(int?), typeof(long), typeof (long?), typeof(short), typeof(short?), typeof(byte), typeof(byte?),
+            typeof(decimal), typeof(decimal?), typeof(double), typeof(double?) };
 
-        public static Expression<Func<T, bool>> Contains(LambdaExpression columnExpression, string value)
+        #region expressions
+
+        internal static Expression Contains(LambdaExpression columnExpression, string value)
+        {
+            return Expression.Call(columnExpression.Body, containsMethod, Expression.Constant(value));
+        }
+
+        internal static Expression NotContains(LambdaExpression columnExpression, string value)
         {
             var callExpression = Expression.Call(columnExpression.Body, containsMethod, Expression.Constant(value));
-            return MakeFilterExpression(callExpression, columnExpression);
+            return Expression.Not(callExpression);
         }
 
-        public static Expression<Func<T, bool>> NotContains(LambdaExpression columnExpression, string value)
+        internal static Expression StartsWith(LambdaExpression columnExpression, string value)
         {
-            var callExpression = Expression.Call(columnExpression.Body, containsMethod, Expression.Constant(value));
-            var innerExpression = Expression.Not(callExpression);
-            return MakeFilterExpression(innerExpression, columnExpression);
+            return Expression.Call(columnExpression.Body, startsWithMethod, Expression.Constant(value));
         }
 
-        public static Expression<Func<T, bool>> StartsWith(LambdaExpression columnExpression, string value)
+        internal static Expression Equal(LambdaExpression columnExpression, object value)
         {
-            var callExpression = Expression.Call(columnExpression.Body, startsWithMethod, Expression.Constant(value));
-            return MakeFilterExpression(callExpression, columnExpression);
+            return Expression.Equal(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
         }
 
-        public static Expression<Func<T, bool>> Equal(LambdaExpression columnExpression, object value)
+
+        internal static Expression NotEqual(LambdaExpression columnExpression, object value)
         {
             var innerExpression = Expression.Equal(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
-            return MakeFilterExpression(innerExpression, columnExpression);
+            return Expression.Not(innerExpression);
         }
 
-
-        public static Expression<Func<T, bool>> NotEqual(LambdaExpression columnExpression, object value)
+        internal static Expression GreaterThan(LambdaExpression columnExpression, object value)
         {
-            var innerExpression = Expression.Equal(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
-            var notInnerExpression = Expression.Not(innerExpression);
-            return MakeFilterExpression(notInnerExpression, columnExpression);
+            return Expression.GreaterThan(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
         }
 
-        public static Expression<Func<T, bool>> GreaterThan(LambdaExpression columnExpression, object value)
+        internal static Expression GreaterThanOrEqual(LambdaExpression columnExpression, object value)
         {
-            var innerExpression = Expression.GreaterThan(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
-            return MakeFilterExpression(innerExpression, columnExpression);
+            return Expression.GreaterThanOrEqual(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
         }
 
-        public static Expression<Func<T, bool>> GreaterThanOrEqual(LambdaExpression columnExpression, object value)
+        internal static Expression LessThan(LambdaExpression columnExpression, object value)
         {
-            var innerExpression = Expression.GreaterThanOrEqual(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
-            return MakeFilterExpression(innerExpression, columnExpression);
+            return Expression.LessThan(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
         }
 
-        public static Expression<Func<T, bool>> LessThan(LambdaExpression columnExpression, object value)
+        internal static Expression LessThanOrEqual(LambdaExpression columnExpression, object value)
         {
-            var innerExpression = Expression.LessThan(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
-            return MakeFilterExpression(innerExpression, columnExpression);
+            return Expression.LessThanOrEqual(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
         }
 
-        public static Expression<Func<T, bool>> LessThanOrEqual(LambdaExpression columnExpression, object value)
-        {
-            var innerExpression = Expression.LessThanOrEqual(columnExpression.Body, Expression.Constant(value, columnExpression.ReturnType));
-            return MakeFilterExpression(innerExpression, columnExpression);
-        }
-
-        public static Expression<Func<T, bool>> InRange(LambdaExpression columnExpression, object valueA, object valueB)
+        internal static Expression InRange(LambdaExpression columnExpression, object valueA, object valueB)
         {
             var a = Expression.GreaterThanOrEqual(columnExpression.Body, Expression.Constant(valueA, columnExpression.ReturnType));
             var b = Expression.LessThanOrEqual(columnExpression.Body, Expression.Constant(valueB, columnExpression.ReturnType));
-            var innerExpression = Expression.And(a, b);
-            return MakeFilterExpression(innerExpression, columnExpression);
+            return Expression.And(a, b);
         }
 
+        #endregion
+
+        /// <summary>
+        /// Returns filtering expression to be used in Where for the specified columnExpression and universalFilterEntry.
+        /// </summary>
+        /// <param name="columnExpression"></param>
+        /// <param name="universalFilterEntry"></param>
+        /// <returns>A lambda expression representing the universalFilterEntry applied to columnExpression.Body</returns>
         public static Expression<Func<T, bool>> GetFilterExpression(LambdaExpression columnExpression, UniversalFilterEntry universalFilterEntry)
         {
-            Expression<Func<T, bool>> r = null;
+            Expression innerExpression = null;
             Type columnType = columnExpression.Body.Type;
 
             if (AllowedOperators.IsOperatorAllowedForType(universalFilterEntry.FilterOperator, columnType) == false)
@@ -91,34 +94,32 @@ namespace MvcAngularGrid.Models.ExpressionList
             {
                 string value = (string)universalFilterEntry.FirstValue;
 
-                if (universalFilterEntry.FilterOperator == FilterOperator.Contains) r = Contains(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.StartsWith) r = StartsWith(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.NotContains) r = NotContains(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) r = NotEqual(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.Contains) innerExpression = Contains(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.StartsWith) innerExpression = StartsWith(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.Equals) innerExpression = Equal(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.NotContains) innerExpression = NotContains(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) innerExpression = NotEqual(columnExpression, value);
             }
-
-            if (columnType == typeof(DateTime) || columnType == typeof(DateTime?))
+            else if (columnType == typeof(DateTime) || columnType == typeof(DateTime?))
             {
                 object value = (object)universalFilterEntry.FirstValue;
 
-                if (universalFilterEntry.FilterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) r = NotEqual(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.GreaterThan) r = GreaterThan(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.LessThan) r = LessThan(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.Equals) innerExpression = Equal(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) innerExpression = NotEqual(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.GreaterThan) innerExpression = GreaterThan(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.LessThan) innerExpression = LessThan(columnExpression, value);
 
                 if (universalFilterEntry.FilterOperator == FilterOperator.InRange)
                 {
                     object secondValue = (object)universalFilterEntry.SecondValue;
 
-                    r = InRange(columnExpression, value, secondValue);
+                    innerExpression = InRange(columnExpression, value, secondValue);
                 }
 
             }
-
-            if (columnType == typeof(int) || columnType == typeof(int?) || columnType == typeof(decimal) || columnType == typeof(decimal?) || columnType == typeof(double) || columnType == typeof(double?))
+            else if (numericTypes.Contains(columnType))
             {
-                object value = (object)universalFilterEntry.FirstValue;
+                object value = universalFilterEntry.FirstValue;
 
                 // Different number types can be converted directly to another
                 // However, we cannot convert them directly to a another nullable, e.g. we cannot convert double => Nullable<decimal> with Convert.ChangeType()
@@ -134,37 +135,27 @@ namespace MvcAngularGrid.Models.ExpressionList
 
                 value = Convert.ChangeType(value, nonNullableColumnType);
 
-                if (universalFilterEntry.FilterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) r = NotEqual(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.GreaterThan) r = GreaterThan(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.GreaterThanOrEqual) r = GreaterThanOrEqual(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.LessThan) r = LessThan(columnExpression, value);
-                if (universalFilterEntry.FilterOperator == FilterOperator.LessThanOrEqual) r = LessThanOrEqual(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.Equals) innerExpression = Equal(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) innerExpression = NotEqual(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.GreaterThan) innerExpression = GreaterThan(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.GreaterThanOrEqual) innerExpression = GreaterThanOrEqual(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.LessThan) innerExpression = LessThan(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.LessThanOrEqual) innerExpression = LessThanOrEqual(columnExpression, value);
 
                 if (universalFilterEntry.FilterOperator == FilterOperator.InRange)
                 {
                     object secondValue = (object)universalFilterEntry.SecondValue;
                     secondValue = Convert.ChangeType(secondValue, nonNullableColumnType);
-                    r = InRange(columnExpression, value, secondValue);
+                    innerExpression = InRange(columnExpression, value, secondValue);
                 }
 
             }
 
-            if (r == null) throw new InvalidOperationException((String.Format("Unsupported operator {0}.", universalFilterEntry.FilterOperator)));
+            if (innerExpression == null) throw new InvalidOperationException((String.Format("Unsupported operator {0}.", universalFilterEntry.FilterOperator)));
+
+            Expression<Func<T, bool>> r = Expression.Lambda<Func<T, bool>>(innerExpression, columnExpression.Parameters.First());
 
             return r;
-        }
-
-
-        /// <summary>
-        /// Simple helper, creates an Expression[Func[T, bool]] from a given inner expression and the column expression. This is to avoid repetitive code.
-        /// </summary>
-        /// <param name="innerExpression"></param>
-        /// <param name="columnExpression"></param>
-        /// <returns></returns>
-        private static Expression<Func<T, bool>> MakeFilterExpression(Expression innerExpression, LambdaExpression columnExpression)
-        {
-            return Expression.Lambda<Func<T, bool>>(innerExpression, columnExpression.Parameters.First());
         }
     }
 }
