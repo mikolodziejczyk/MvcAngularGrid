@@ -55,17 +55,15 @@ namespace MvcAngularGrid.Controllers
                 // if filters aren't posted, in filters we get values from MVC; with "action", "controller" as keys; they must be excluded, currently by their null value criterion
                 foreach (var kvp in filterModel.Where(x => x.Value != null))
                 {
-                    string field = kvp.Key;
-                    string value = kvp.Value.filter;
-
-                    LambdaExpression columnExpression = columnSource[field];
-
-                    // FilterOperator filterOperator = FilterOperatorParser.filterOperators[kvp.Value.@type];
+                    // get expression for this column
+                    LambdaExpression columnExpression = columnSource[kvp.Key];
+                    // convert grid-specific filter to an universal entry
                     UniversalFilterEntry universalFilterEntry = FilterEntryConverter.Convert(kvp.Value);
+                    // check whether the entry was parsed successfully
                     if (universalFilterEntry == null) continue;
-
+                    // get the fltering expression from universalFilterEntry
                     Expression<Func<Connection, bool>> filterExpression = FilterExpressions<Connection>.GetFilterExpression(columnExpression, universalFilterEntry);
-
+                    // and apply it to the query
                     query = query.Where(filterExpression);
                 }
 

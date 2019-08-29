@@ -6,6 +6,9 @@ using System.Web;
 
 namespace MvcAngularGrid.Models.AgGrid
 {
+    /// <summary>
+    /// Replaces string-based ag-grid operator names with the universal FilterOperator enum.
+    /// </summary>
     public static class FilterOperatorParser
     {
         public static IDictionary<string, FilterOperator> filterOperators = new Dictionary<string, FilterOperator>(StringComparer.InvariantCultureIgnoreCase)

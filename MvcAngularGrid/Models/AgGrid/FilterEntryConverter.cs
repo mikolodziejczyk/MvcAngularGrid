@@ -7,8 +7,17 @@ using System.Web;
 
 namespace MvcAngularGrid.Models.AgGrid
 {
+    /// <summary>
+    /// Converts an ag-grid  FilterEntry into UniversalFilterEntry
+    /// </summary>
     public class FilterEntryConverter
     {
+        /// <summary>
+        /// Converts an ag-grid  FilterEntry into UniversalFilterEntry
+        /// </summary>
+        /// <param name="filterEntry">The ag-grid entry to convert</param>
+        /// <returns>An UniversalFilterEntry instance or null if the data values in the FilterEntry instance couldn't be parsed.</returns>
+        /// <remarks>Only non-parsable data cause null to be returned, in other cases an exception is thrown</remarks>
         static public UniversalFilterEntry Convert(FilterEntry filterEntry)
         {
             UniversalFilterEntry r = new UniversalFilterEntry();
@@ -23,8 +32,7 @@ namespace MvcAngularGrid.Models.AgGrid
                     r.FirstValue = filterEntry.filter;
                     r.SecondValue = null;
                 }
-
-                if (filterEntry.filterType == "date")
+                else if (filterEntry.filterType == "date")
                 {
                     r.FirstValue = DateTime.ParseExact(filterEntry.dateFrom, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                     if (String.IsNullOrEmpty(filterEntry.dateTo) == false)
@@ -32,8 +40,7 @@ namespace MvcAngularGrid.Models.AgGrid
                         r.SecondValue = DateTime.ParseExact(filterEntry.dateTo, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                     }
                 }
-
-                if (filterEntry.filterType == "number")
+                else if (filterEntry.filterType == "number")
                 {
                     r.FirstValue = double.Parse(filterEntry.filter, CultureInfo.CurrentCulture);
                     if (String.IsNullOrEmpty(filterEntry.filterTo) == false)
@@ -41,8 +48,16 @@ namespace MvcAngularGrid.Models.AgGrid
                         r.SecondValue = double.Parse(filterEntry.filterTo, CultureInfo.CurrentCulture);
                     }
                 }
+                else
+                {
+                    throw new InvalidOperationException(String.Format("The filter type {0} is not supported.", filterEntry.filterType));
+                }
             }
-            catch (Exception e)
+            catch (InvalidOperationException)
+            {
+                throw;
+            }
+            catch (Exception)
             {
                 r = null;
             }
@@ -52,7 +67,7 @@ namespace MvcAngularGrid.Models.AgGrid
 
         static public UniversalFilterEntry[] ConvertSequence(FilterEntry[] filterEntries)
         {
-            return filterEntries.Select(x => Convert(x)).Where(x=>x != null).ToArray();
+            return filterEntries.Where(x => x != null).Select(x => Convert(x)).Where(x => x != null).ToArray();
         }
     }
 }
