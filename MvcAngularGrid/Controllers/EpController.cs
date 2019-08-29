@@ -60,9 +60,11 @@ namespace MvcAngularGrid.Controllers
 
                     LambdaExpression columnExpression = columnSource[field];
 
-                    FilterOperator filterOperator = FilterOperatorParser.filterOperators[kvp.Value.@type];
+                    // FilterOperator filterOperator = FilterOperatorParser.filterOperators[kvp.Value.@type];
+                    FilterEntryConverter filterEntryConverter = new FilterEntryConverter();
+                    UniversalFilterEntry universalFilterEntry = filterEntryConverter.Convert(kvp.Value);
 
-                    Expression<Func<Connection, bool>> filterExpression = FilterExpressions<Connection>.GetFilterExpression(columnExpression, value, filterOperator);
+                    Expression<Func<Connection, bool>> filterExpression = FilterExpressions<Connection>.GetFilterExpression(columnExpression, universalFilterEntry);
 
                     query = query.Where(filterExpression);
                 }

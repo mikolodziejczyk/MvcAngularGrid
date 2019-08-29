@@ -11,5 +11,7 @@ namespace MvcAngularGrid.Models.AgGrid
         public string type { get; set; }
         public string filter { get; set; }
         public string filterTo { get; set; }
+        public string dateFrom { get; set; }
+        public string dateTo { get; set; }
     }
 }

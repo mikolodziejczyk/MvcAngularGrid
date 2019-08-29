@@ -31,40 +31,91 @@ namespace MvcAngularGrid.Models.ExpressionList
             return MakeFilterExpression(callExpression, columnExpression);
         }
 
-        public static Expression<Func<T, bool>> Equal(LambdaExpression columnExpression, string value)
+        public static Expression<Func<T, bool>> Equal(LambdaExpression columnExpression, object value)
         {
             var innerExpression = Expression.Equal(columnExpression.Body, Expression.Constant(value));
             return MakeFilterExpression(innerExpression, columnExpression);
         }
 
 
-        public static Expression<Func<T, bool>> NotEqual(LambdaExpression columnExpression, string value)
+        public static Expression<Func<T, bool>> NotEqual(LambdaExpression columnExpression, object value)
         {
             var innerExpression = Expression.Equal(columnExpression.Body, Expression.Constant(value));
             var notInnerExpression = Expression.Not(innerExpression);
             return MakeFilterExpression(notInnerExpression, columnExpression);
         }
 
-        public static Expression<Func<T, bool>> GetFilterExpression(LambdaExpression columnExpression, string value, FilterOperator filterOperator)
+        public static Expression<Func<T, bool>> GreaterThan(LambdaExpression columnExpression, object value)
+        {
+            var innerExpression = Expression.GreaterThan(columnExpression.Body, Expression.Constant(value));
+            return MakeFilterExpression(innerExpression, columnExpression);
+        }
+
+        public static Expression<Func<T, bool>> GreaterThanOrEqual(LambdaExpression columnExpression, object value)
+        {
+            var innerExpression = Expression.GreaterThanOrEqual(columnExpression.Body, Expression.Constant(value));
+            return MakeFilterExpression(innerExpression, columnExpression);
+        }
+
+        public static Expression<Func<T, bool>> LessThan(LambdaExpression columnExpression, object value)
+        {
+            var innerExpression = Expression.LessThan(columnExpression.Body, Expression.Constant(value));
+            return MakeFilterExpression(innerExpression, columnExpression);
+        }
+
+        public static Expression<Func<T, bool>> LessThanOrEqual(LambdaExpression columnExpression, object value)
+        {
+            var innerExpression = Expression.LessThanOrEqual(columnExpression.Body, Expression.Constant(value));
+            return MakeFilterExpression(innerExpression, columnExpression);
+        }
+
+        public static Expression<Func<T, bool>> InRange(LambdaExpression columnExpression, object valueA, object valueB)
+        {
+            var a = Expression.GreaterThanOrEqual(columnExpression.Body, Expression.Constant(valueA));
+            var b = Expression.LessThanOrEqual(columnExpression.Body, Expression.Constant(valueB));
+            var innerExpression = Expression.And(a, b);
+            return MakeFilterExpression(innerExpression, columnExpression);
+        }
+
+        public static Expression<Func<T, bool>> GetFilterExpression(LambdaExpression columnExpression, UniversalFilterEntry universalFilterEntry)
         {
             Expression<Func<T, bool>> r = null;
             Type columnType = columnExpression.Body.Type;
 
-            if (AllowedOperators.IsOperatorAllowedForType(filterOperator, columnType) == false)
+            if (AllowedOperators.IsOperatorAllowedForType(universalFilterEntry.FilterOperator, columnType) == false)
             {
-                throw new InvalidOperationException(String.Format("The operator {0} is invalid for the type {1}", filterOperator, columnExpression.Type.ToString()));
+                throw new InvalidOperationException(String.Format("The operator {0} is invalid for the type {1}", universalFilterEntry.FilterOperator, columnExpression.Type.ToString()));
             }
 
             if (columnType == typeof(string))
             {
-                if (filterOperator == FilterOperator.Contains) r = Contains(columnExpression, value);
-                if (filterOperator == FilterOperator.StartsWith) r = StartsWith(columnExpression, value);
-                if (filterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
-                if (filterOperator == FilterOperator.NotContains) r = NotContains(columnExpression, value);
-                if (filterOperator == FilterOperator.NotEquals) r = NotEqual(columnExpression, value);
+                string value = (string)universalFilterEntry.FirstValue;
+
+                if (universalFilterEntry.FilterOperator == FilterOperator.Contains) r = Contains(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.StartsWith) r = StartsWith(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.NotContains) r = NotContains(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.NotEquals) r = NotEqual(columnExpression, value);
             }
 
-            if (r == null) throw new InvalidOperationException((String.Format("Unsupported operator {0}.", filterOperator)));
+            if (columnType == typeof(DateTime))
+            {
+                DateTime value = (DateTime)universalFilterEntry.FirstValue;
+
+                if (universalFilterEntry.FilterOperator == FilterOperator.Equals) r = Equal(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.NotEquals) r = NotEqual(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.GreaterThan) r = GreaterThan(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.LessThan) r = LessThan(columnExpression, value);
+
+                if (universalFilterEntry.FilterOperator == FilterOperator.InRange)
+                {
+                    DateTime secondValue = (DateTime)universalFilterEntry.SecondValue;
+                    r = InRange(columnExpression, value, secondValue);
+                }
+
+            }
+
+            if (r == null) throw new InvalidOperationException((String.Format("Unsupported operator {0}.", universalFilterEntry.FilterOperator)));
 
             return r;
         }

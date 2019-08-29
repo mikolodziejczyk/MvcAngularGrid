@@ -8,11 +8,24 @@ namespace MvcAngularGrid.Models.ExpressionList
     public static class AllowedOperators
     {
         public static FilterOperator[] OperatorsAllowedForString = new FilterOperator[] { FilterOperator.Contains, FilterOperator.Equals, FilterOperator.NotContains, FilterOperator.NotEquals, FilterOperator.StartsWith };
+        public static FilterOperator[] OperatorsAllowedForDate = new FilterOperator[] { FilterOperator.Equals, FilterOperator.NotEquals, FilterOperator.GreaterThan, FilterOperator.LessThan, FilterOperator.InRange};
+        public static FilterOperator[] OperatorsAllowedForNumber = new FilterOperator[] { FilterOperator.Equals, FilterOperator.NotEquals, FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual, FilterOperator.LessThan, FilterOperator.LessThanOrEqual, FilterOperator.InRange };
 
         public static bool IsOperatorAllowedForString(FilterOperator filterOperator)
         {
             return OperatorsAllowedForString.Contains(filterOperator);
         }
+
+        public static bool IsOperatorAllowedForDate(FilterOperator filterOperator)
+        {
+            return OperatorsAllowedForDate.Contains(filterOperator);
+        }
+
+        public static bool IsOperatorAllowedForNumber(FilterOperator filterOperator)
+        {
+            return OperatorsAllowedForNumber.Contains(filterOperator);
+        }
+
 
         public static bool IsOperatorAllowedForType(FilterOperator filterOperator, Type type)
         {
@@ -21,6 +34,16 @@ namespace MvcAngularGrid.Models.ExpressionList
             if (type == typeof(String))
             {
                 r = IsOperatorAllowedForString(filterOperator);
+            }
+
+            if (type == typeof(DateTime))
+            {
+                r = IsOperatorAllowedForDate(filterOperator);
+            }
+
+            if (type == typeof(Decimal) || type == typeof(int))
+            {
+                r = IsOperatorAllowedForNumber(filterOperator);
             }
 
             return r;
