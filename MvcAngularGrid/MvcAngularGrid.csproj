@@ -151,6 +151,7 @@
     <Compile Include="Models\ExpressionList\AllowedOperators.cs" />
     <Compile Include="Models\ExpressionList\FilterExpressions.cs" />
     <Compile Include="Models\ExpressionList\FilterOperator.cs" />
+    <Compile Include="Models\ExpressionList\SortHelper.cs" />
     <Compile Include="Models\ExpressionList\UniversalFilterEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
