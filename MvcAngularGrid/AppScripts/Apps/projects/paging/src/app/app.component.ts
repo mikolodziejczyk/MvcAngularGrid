@@ -114,6 +114,9 @@ export class AppComponent implements OnInit {
         alert('Loading error');
       }
 
+      // the part replacing ISO date strings with real dates is acually optional,
+      // Angular formatDate handles properly a ISO date string as an input
+
       // tslint:disable-next-line:prefer-for-of
       for (let i = 0; i < data.rows.length; i++) {
         const row: any = data.rows[i];
