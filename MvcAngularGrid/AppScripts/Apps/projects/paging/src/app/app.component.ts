@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { GridOptions, IDatasource, IGetRowsParams } from 'ag-grid-community';
+import { GridOptions, IDatasource, IGetRowsParams, ValueFormatterParams } from 'ag-grid-community';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -17,36 +18,62 @@ export class AppComponent implements OnInit {
   private gridApi;
 
   columnDefs = [
-    { headerName: 'Ppe', field: 'ppe', sortable: true,
+    {
+      headerName: 'Ppe', field: 'ppe', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] } },
-    { headerName: 'CeterCode', field: 'meterCode', sortable: true,
+      filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
+    },
+    {
+      headerName: 'CeterCode', field: 'meterCode', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }  },
-    { headerName: 'Name', field: 'name', sortable: true,
+      filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
+    },
+    {
+      headerName: 'Name', field: 'name', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }  },
-    { headerName: 'Tariff', field: 'tariff', sortable: true,
+      filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
+    },
+    {
+      headerName: 'Tariff', field: 'tariff', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual']  } },
-    { headerName: 'Company', field: 'company', sortable: true,
+      filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
+    },
+    {
+      headerName: 'Company', field: 'company', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true,  filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }  },
-    { headerName: 'Start date', field: 'startDate', sortable: true,
+      filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
+    },
+    {
+      headerName: 'Start date', field: 'startDate',
+      valueFormatter: gridDateFormatter,
+      sortable: true,
       filter: 'agDateColumnFilter',
-      filterParams: { suppressAndOrCondition: true }  },
-    { headerName: 'End date', field: 'endDate', sortable: true,
+      filterParams: { suppressAndOrCondition: true }
+    },
+    {
+      headerName: 'End date', field: 'endDate',
+      valueFormatter: gridDateFormatter,
+      sortable: true,
       filter: 'agDateColumnFilter',
-      filterParams: { suppressAndOrCondition: true }  },
-    { headerName: 'Ordered capacity', field: 'orderedCapacity', sortable: true,
+      filterParams: { suppressAndOrCondition: true }
+    },
+    {
+      headerName: 'Ordered capacity', field: 'orderedCapacity', sortable: true,
       filter: 'agNumberColumnFilter',
-      filterParams: { suppressAndOrCondition: true }  },
-    { headerName: 'End date nullable', field: 'endDateNullable', sortable: true,
+      filterParams: { suppressAndOrCondition: true }
+    },
+    {
+      headerName: 'End date nullable', field: 'endDateNullable',
+      valueFormatter: gridDateFormatter,
+      sortable: true,
       filter: 'agDateColumnFilter',
-      filterParams: { suppressAndOrCondition: true }  },
-    { headerName: 'Ordered capacity nullable', field: 'orderedCapacityNullable', sortable: true,
+      filterParams: { suppressAndOrCondition: true }
+    },
+    {
+      headerName: 'Ordered capacity nullable', field: 'orderedCapacityNullable', sortable: true,
       filter: 'agNumberColumnFilter',
-      filterParams: { suppressAndOrCondition: true }  }
+      filterParams: { suppressAndOrCondition: true }
+    }
   ];
 
   rowData: any;
@@ -85,6 +112,14 @@ export class AppComponent implements OnInit {
         data = await this.loadData(params);
       } catch (e) {
         alert('Loading error');
+      }
+
+      // tslint:disable-next-line:prefer-for-of
+      for (let i = 0; i < data.rows.length; i++) {
+        const row: any = data.rows[i];
+        row.startDate = parseNullableDate(row.startDate);
+        row.endDate = parseNullableDate(row.endDate);
+        row.endDateNullable = parseNullableDate(row.endDateNullable);
       }
 
       const pageSize = 20;
@@ -129,4 +164,22 @@ export class AppComponent implements OnInit {
 interface IDataResponse {
   rows: [];
   count: number;
+}
+
+function parseNullableDate(input: string): Date | null {
+  let r: Date | null = null;
+  if (input) {
+    r = new Date(input);
+  }
+
+  return r;
+}
+
+function gridDateFormatter(params: ValueFormatterParams): any {
+  const date: Date = params.value;
+  let r: string = null;
+  if (date) {
+    r = formatDate(date, 'yyyy-MM-dd', 'en-US');
+  }
+  return r;
 }
