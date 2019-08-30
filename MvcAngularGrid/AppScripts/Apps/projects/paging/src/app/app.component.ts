@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { GridOptions, IDatasource, IGetRowsParams, ValueFormatterParams, ICellRendererParams } from 'ag-grid-community';
+import { GridOptions, IDatasource, IGetRowsParams, ValueFormatterParams, ICellRendererParams, RowDoubleClickedEvent } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
 
 // tslint:disable-next-line:prefer-const
@@ -128,7 +128,8 @@ export class AppComponent implements OnInit {
       try {
         data = await this.loadData(params);
       } catch (e) {
-        alert('Loading error');
+        params.failCallback();
+        return;
       }
 
       // the part replacing ISO date strings with real dates is acually optional,
@@ -167,16 +168,20 @@ export class AppComponent implements OnInit {
 
   async loadData(params: IGetRowsParams): Promise<IDataResponse> {
     let r: any;
-    try {
-      const url = baseUrl + `/data/ep/page`;
 
-      console.log(`Fetching from ${url} with ${JSON.stringify(params)}`);
-      r = await this.http.post(url, params).toPromise();
-    } catch (e) {
-      alert('Unable to load data.');
-    }
+    const url = baseUrl + `/data/ep/page`;
+
+    console.log(`Fetching from ${url} with ${JSON.stringify(params)}`);
+    r = await this.http.post(url, params).toPromise();
 
     return r as IDataResponse;
+  }
+
+  onRowDoubleClicked = (event: RowDoubleClickedEvent) => {
+    if (event.data) {
+      // tslint:disable-next-line:no-string-literal
+      alert(`Navigate to: ${event.data['id']}`);
+    }
   }
 }
 
