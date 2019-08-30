@@ -107,7 +107,7 @@ namespace MvcAngularGrid.Controllers
                         endDate = x.EndDate,
                         orderedCapacity = x.OrderedCapacity,
                         endDateNullable = x.EndDate,
-                        orderedCapacityNullable = x.OrderedCapacity
+                        orderedCapacityNullable = x.OrderedCapacity,
                     }).ToArray();
 
 

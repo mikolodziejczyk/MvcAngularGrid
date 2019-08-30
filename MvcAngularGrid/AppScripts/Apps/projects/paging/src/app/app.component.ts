@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { GridOptions, IDatasource, IGetRowsParams, ValueFormatterParams } from 'ag-grid-community';
+import { GridOptions, IDatasource, IGetRowsParams, ValueFormatterParams, ICellRendererParams } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
+
+// tslint:disable-next-line:prefer-const
+let baseUrl = ''; // the application base path, must be somehow passed to the app
 
 @Component({
   selector: 'app-root',
@@ -15,16 +18,25 @@ export class AppComponent implements OnInit {
 
   title = 'Apps';
 
+
   private gridApi;
+
+  defaultColDef = {
+    resizable: true
+  };
 
   columnDefs = [
     {
-      headerName: 'Ppe', field: 'ppe', sortable: true,
+      headerName: 'Ppe', field: 'ppe',
+      cellRenderer: linkRenderer,
+      sortable: true,
       filter: true,
       filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
     },
     {
-      headerName: 'CeterCode', field: 'meterCode', sortable: true,
+      headerName: 'MeterCode', field: 'meterCode',
+      cellRenderer: linkRenderer,
+      sortable: true,
       filter: true,
       filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
     },
@@ -45,6 +57,7 @@ export class AppComponent implements OnInit {
     },
     {
       headerName: 'Start date', field: 'startDate',
+      cellClass: ['text-center'],
       valueFormatter: gridDateFormatter,
       sortable: true,
       filter: 'agDateColumnFilter',
@@ -52,6 +65,7 @@ export class AppComponent implements OnInit {
     },
     {
       headerName: 'End date', field: 'endDate',
+      cellClass: ['text-center'],
       valueFormatter: gridDateFormatter,
       sortable: true,
       filter: 'agDateColumnFilter',
@@ -59,11 +73,13 @@ export class AppComponent implements OnInit {
     },
     {
       headerName: 'Ordered capacity', field: 'orderedCapacity', sortable: true,
+      cellClass: ['text-right'],
       filter: 'agNumberColumnFilter',
       filterParams: { suppressAndOrCondition: true }
     },
     {
       headerName: 'End date nullable', field: 'endDateNullable',
+      cellClass: ['text-center'],
       valueFormatter: gridDateFormatter,
       sortable: true,
       filter: 'agDateColumnFilter',
@@ -71,6 +87,7 @@ export class AppComponent implements OnInit {
     },
     {
       headerName: 'Ordered capacity nullable', field: 'orderedCapacityNullable', sortable: true,
+      cellClass: ['text-right'],
       filter: 'agNumberColumnFilter',
       filterParams: { suppressAndOrCondition: true }
     }
@@ -151,7 +168,7 @@ export class AppComponent implements OnInit {
   async loadData(params: IGetRowsParams): Promise<IDataResponse> {
     let r: any;
     try {
-      const url = `/data/ep/page`;
+      const url = baseUrl + `/data/ep/page`;
 
       console.log(`Fetching from ${url} with ${JSON.stringify(params)}`);
       r = await this.http.post(url, params).toPromise();
@@ -161,7 +178,6 @@ export class AppComponent implements OnInit {
 
     return r as IDataResponse;
   }
-
 }
 
 interface IDataResponse {
@@ -184,5 +200,22 @@ function gridDateFormatter(params: ValueFormatterParams): any {
   if (date) {
     r = formatDate(date, 'yyyy-MM-dd', 'en-US');
   }
+  return r;
+}
+
+function linkRenderer(params: ICellRendererParams): string {
+  const text = params.value;
+  let r = null;
+
+  if (params.data) {
+    // tslint:disable-next-line:no-string-literal
+    const id = params.data['id'];
+    const url = baseUrl + `/connection/details/` + id;
+
+    if (text) {
+      r = `<a href="${url}">${text}</a>`;
+    }
+  }
+
   return r;
 }
