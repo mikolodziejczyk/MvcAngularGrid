@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+// tslint:disable-next-line:max-line-length
 import { GridOptions, IDatasource, IGetRowsParams, ValueFormatterParams, ICellRendererParams, RowDoubleClickedEvent } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
+import { getLocalizedText } from './locale';
 
 // tslint:disable-next-line:prefer-const
 let baseUrl = ''; // the application base path, must be somehow passed to the app
@@ -17,7 +19,7 @@ export class AppComponent implements OnInit {
   }
 
   title = 'Apps';
-
+  localeText = getLocalizedText();
 
   private gridApi;
 
