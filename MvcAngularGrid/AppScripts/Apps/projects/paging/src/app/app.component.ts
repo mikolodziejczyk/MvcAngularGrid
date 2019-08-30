@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
 
   title = 'Apps';
   localeText = getLocalizedText();
+  globalFilter = '';
 
   private gridApi;
 
@@ -171,7 +172,7 @@ export class AppComponent implements OnInit {
   async loadData(params: IGetRowsParams): Promise<IDataResponse> {
     let r: any;
 
-    const url = baseUrl + `/data/ep/page`;
+    const url = baseUrl + `/data/ep/page?globalFilter=${this.globalFilter}`;
 
     console.log(`Fetching from ${url} with ${JSON.stringify(params)}`);
     r = await this.http.post(url, params).toPromise();
@@ -182,7 +183,10 @@ export class AppComponent implements OnInit {
   onRowDoubleClicked = (event: RowDoubleClickedEvent) => {
     if (event.data) {
       // tslint:disable-next-line:no-string-literal
-      alert(`Navigate to: ${event.data['id']}`);
+      alert(`Navigate to: ${event.data['id']}.\r\nTemporary setting the global filter.`);
+      console.log(`Setting global filter to ${event.data.company}...`);
+      this.globalFilter = event.data.company;
+      this.gridOptions.api.onFilterChanged();
     }
   }
 }

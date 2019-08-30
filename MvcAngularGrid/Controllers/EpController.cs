@@ -50,7 +50,7 @@ namespace MvcAngularGrid.Controllers
             { "orderedCapacityNullable",  (Expression<Func<Connection, decimal?>>)(x => x.OrderedCapacity)}
         };
 
-        public ActionResult Page(int startRow, int endRow, SortEntry[] sortModel, Dictionary<string, FilterEntry> filterModel)
+        public ActionResult Page(int startRow, int endRow, SortEntry[] sortModel, Dictionary<string, FilterEntry> filterModel, string globalFilter)
         {
             using (EnergyPointEntities context = new EnergyPointEntities())
             {
@@ -70,6 +70,12 @@ namespace MvcAngularGrid.Controllers
                     Expression<Func<Connection, bool>> filterExpression = FilterExpressions<Connection>.GetFilterExpression(columnExpression, universalFilterEntry);
                     // and apply it to the query
                     query = query.Where(filterExpression);
+                }
+
+                // global filtering 
+                if (String.IsNullOrWhiteSpace(globalFilter) == false)
+                {
+                    query = query.Where(x => x.Name.Contains(globalFilter) || x.PPE.Contains(globalFilter) || x.MeterCode.Contains(globalFilter) || x.Company.Acronym.Contains(globalFilter) || x.Tariff.Name.Contains(globalFilter));
                 }
 
                 int count = query.Count();
