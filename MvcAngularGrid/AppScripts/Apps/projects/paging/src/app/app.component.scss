@@ -1,5 +1,16 @@
-#searchTerm {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 10em;
+div.actions-container {
+  margin: 10px 5px 10px 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  div.search {
+
+
+    input.search-term {
+        width: 10em;
+      }
+  }
+
+
 }
