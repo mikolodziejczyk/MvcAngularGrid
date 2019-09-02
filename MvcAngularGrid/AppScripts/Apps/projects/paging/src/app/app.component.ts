@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 // tslint:disable-next-line:max-line-length
 import { GridOptions, IDatasource, IGetRowsParams, ValueFormatterParams, ICellRendererParams, RowDoubleClickedEvent } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
 import { getLocalizedText } from './locale';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { Debouncer } from './debouncer';
 
 // tslint:disable-next-line:prefer-const
 let baseUrl = ''; // the application base path, must be somehow passed to the app
@@ -13,10 +16,15 @@ let baseUrl = ''; // the application base path, must be somehow passed to the ap
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+
   constructor (private http: HttpClient) {
 
   }
+
+  globalFilterControl: FormControl = new FormControl();
+  globalFilterControlSubscription: Subscription;
+  globalFilterControlDebouncer: Debouncer = new Debouncer();
 
   title = 'Apps';
   localeText = getLocalizedText();
@@ -161,6 +169,13 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // this.loadData();
+    this.globalFilterControlSubscription =
+      this.globalFilterControl.valueChanges.subscribe(x => this.globalFilterControlDebouncer.onChange());
+    this.globalFilterControlDebouncer.callback = () => { this.setGlobalFilter(this.globalFilterControl.value); };
+  }
+
+  ngOnDestroy(): void {
+    this.globalFilterControlSubscription.unsubscribe();
   }
 
   onGridReady(params: any) {
@@ -189,7 +204,14 @@ export class AppComponent implements OnInit {
       this.gridOptions.api.onFilterChanged();
     }
   }
+
+  setGlobalFilter = (filterText: string) => {
+    this.globalFilter = filterText;
+    this.gridOptions.api.onFilterChanged();
+  }
 }
+
+
 
 interface IDataResponse {
   rows: [];

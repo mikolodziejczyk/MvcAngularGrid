@@ -1,12 +1,8 @@
-<ag-grid-angular 
-    style="width: 100%; height: 500px;" 
-    class="ag-theme-balham"
-    [columnDefs]="columnDefs"
-    [defaultColDef]="defaultColDef"
-    [gridOptions]="gridOptions"
-    [localeText]="localeText"
-    [enableCellTextSelection]="true"
-    (gridReady) = "onGridReady($event);"
-    (rowDoubleClicked) = "onRowDoubleClicked($event);"
-    >
+<input type="text" class="form-control" id="searchTerm" placeholder="search..." [formControl]="globalFilterControl">
+
+
+<ag-grid-angular style="width: 100%; height: 500px;" class="ag-theme-balham" [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef" [gridOptions]="gridOptions" [localeText]="localeText"
+    [enableCellTextSelection]="true" (gridReady)="onGridReady($event);"
+    (rowDoubleClicked)="onRowDoubleClicked($event);">
 </ag-grid-angular>
