@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GridServerSideSortingAndFiltering</name>
+    </assembly>
+    <members>
+        <member name="T:GridServerSideSortingAndFiltering.AgGrid.FilterEntry">
+            <summary>
+            Represents a single filter entry for ag-grid.
+            </summary>
+        </member>
+        <member name="P:GridServerSideSortingAndFiltering.AgGrid.FilterEntry.filterType">
+            <summary>
+            What is the data type: text, date or number
+            </summary>
+        </member>
+        <member name="T:GridServerSideSortingAndFiltering.AgGrid.FilterEntryConverter">
+            <summary>
+            Converts an ag-grid  FilterEntry into UniversalFilterEntry
+            </summary>
+        </member>
+        <member name="M:GridServerSideSortingAndFiltering.AgGrid.FilterEntryConverter.Convert(GridServerSideSortingAndFiltering.AgGrid.FilterEntry)">
+            <summary>
+            Converts an ag-grid  FilterEntry into UniversalFilterEntry
+            </summary>
+            <param name="filterEntry">The ag-grid entry to convert</param>
+            <returns>An UniversalFilterEntry instance or null if the data values in the FilterEntry instance couldn't be parsed.</returns>
+            <remarks>Only non-parsable data cause null to be returned, in other cases an exception is thrown</remarks>
+        </member>
+        <member name="T:GridServerSideSortingAndFiltering.AgGrid.FilterOperatorParser">
+            <summary>
+            Replaces string-based ag-grid operator names with the universal FilterOperator enum.
+            </summary>
+        </member>
+        <member name="M:GridServerSideSortingAndFiltering.ExpressionList.FilterExpressions`1.GetFilterExpression(System.Linq.Expressions.LambdaExpression,GridServerSideSortingAndFiltering.ExpressionList.UniversalFilterEntry)">
+            <summary>
+            Returns filtering expression to be used in Where for the specified columnExpression and universalFilterEntry.
+            </summary>
+            <param name="columnExpression"></param>
+            <param name="universalFilterEntry"></param>
+            <returns>A lambda expression representing the universalFilterEntry applied to columnExpression.Body</returns>
+        </member>
+        <member name="T:GridServerSideSortingAndFiltering.ExpressionList.UniversalFilterEntry">
+            <summary>
+            Normalized filtering operation.
+            </summary>
+        </member>
+        <member name="P:GridServerSideSortingAndFiltering.ExpressionList.UniversalFilterEntry.FirstValue">
+            <summary>
+            The first operator value, used by all operators. This can be string, DateTime or double.
+            </summary>
+        </member>
+        <member name="P:GridServerSideSortingAndFiltering.ExpressionList.UniversalFilterEntry.SecondValue">
+            <summary>
+            The second operator value, used by selected operators, like inRange. This can be string, DateTime or double.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,6 +1,6 @@
 ﻿using EnergyPoint.Repository;
-using MvcAngularGrid.Models.AgGrid;
-using MvcAngularGrid.Models.ExpressionList;
+using GridServerSideSortingAndFiltering.AgGrid;
+using GridServerSideSortingAndFiltering.ExpressionList;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
