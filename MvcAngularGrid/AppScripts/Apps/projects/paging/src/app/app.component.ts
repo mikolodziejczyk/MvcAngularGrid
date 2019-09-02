@@ -9,7 +9,8 @@ import { Subscription } from 'rxjs';
 import { Debouncer } from './debouncer';
 import { IDataResponse } from './IDataResponse';
 import { IAgGridDataRequest, PrepareAgGridDataRequest } from './IAgGridDataRequest';
-import { dateFieldFixer } from './dateFileldFixer';
+import { dateFieldFixer } from './dateFieldFixer';
+import { localeText_pl } from 'aggridlocale/lib/pl';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
   globalFilterControlSubscription: Subscription;
   globalFilterControlDebouncer: Debouncer = new Debouncer();
 
-  localeText = getLocalizedText('pl');
+  localeText = localeText_pl;
   globalFilter = '';
 
   private gridApi;
