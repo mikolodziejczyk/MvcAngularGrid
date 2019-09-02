@@ -16,9 +16,9 @@ namespace MvcAngularGrid.Models.AgGrid
             { "contains", FilterOperator.Contains },
             { "notContains", FilterOperator.NotContains },
             { "startsWith", FilterOperator.StartsWith },
+            { "endsWith", FilterOperator.EndsWith },
             { "equals", FilterOperator.Equals },
             { "notEqual", FilterOperator.NotEqual },
-
             { "lessThan", FilterOperator.LessThan },
             { "lessThanOrEqual", FilterOperator.LessThanOrEqual },
             { "greaterThan", FilterOperator.GreaterThan },

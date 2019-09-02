@@ -11,6 +11,7 @@ namespace MvcAngularGrid.Models.ExpressionList
     {
         static MethodInfo containsMethod = typeof(String).GetMethod("Contains");
         static MethodInfo startsWithMethod = typeof(String).GetMethod("StartsWith", new Type[] { typeof(string) });
+        static MethodInfo endsWithMethod = typeof(String).GetMethod("EndsWith", new Type[] { typeof(string) });
         // all entity column types for which numeric filter should be used
         static HashSet<Type> numericTypes = new HashSet<Type>() { typeof(int), typeof(int?), typeof(long), typeof (long?), typeof(short), typeof(short?), typeof(byte), typeof(byte?),
             typeof(decimal), typeof(decimal?), typeof(double), typeof(double?) };
@@ -31,6 +32,11 @@ namespace MvcAngularGrid.Models.ExpressionList
         internal static Expression StartsWith(LambdaExpression columnExpression, string value)
         {
             return Expression.Call(columnExpression.Body, startsWithMethod, Expression.Constant(value));
+        }
+
+        internal static Expression EndsWith(LambdaExpression columnExpression, string value)
+        {
+            return Expression.Call(columnExpression.Body, endsWithMethod, Expression.Constant(value));
         }
 
         internal static Expression Equal(LambdaExpression columnExpression, object value)
@@ -96,6 +102,7 @@ namespace MvcAngularGrid.Models.ExpressionList
 
                 if (universalFilterEntry.FilterOperator == FilterOperator.Contains) innerExpression = Contains(columnExpression, value);
                 if (universalFilterEntry.FilterOperator == FilterOperator.StartsWith) innerExpression = StartsWith(columnExpression, value);
+                if (universalFilterEntry.FilterOperator == FilterOperator.EndsWith) innerExpression = EndsWith(columnExpression, value);
                 if (universalFilterEntry.FilterOperator == FilterOperator.Equals) innerExpression = Equal(columnExpression, value);
                 if (universalFilterEntry.FilterOperator == FilterOperator.NotContains) innerExpression = NotContains(columnExpression, value);
                 if (universalFilterEntry.FilterOperator == FilterOperator.NotEqual) innerExpression = NotEqual(columnExpression, value);

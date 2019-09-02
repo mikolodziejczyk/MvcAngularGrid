@@ -12,6 +12,7 @@ namespace MvcAngularGrid.Models.ExpressionList
         Equals,
         NotEqual,
         StartsWith,
+        EndsWith,
         LessThan,
         LessThanOrEqual,
         GreaterThan,

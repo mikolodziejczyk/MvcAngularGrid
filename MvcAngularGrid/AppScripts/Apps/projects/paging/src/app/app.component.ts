@@ -42,29 +42,29 @@ export class AppComponent implements OnInit, OnDestroy {
       cellRenderer: linkRenderer,
       sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
+      filterParams: { suppressAndOrCondition: true }
     },
     {
       headerName: 'MeterCode', field: 'meterCode',
       cellRenderer: linkRenderer,
       sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
+      filterParams: { suppressAndOrCondition: true }
     },
     {
       headerName: 'Name', field: 'name', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
+      filterParams: { suppressAndOrCondition: true }
     },
     {
       headerName: 'Tariff', field: 'tariff', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
+      filterParams: { suppressAndOrCondition: true }
     },
     {
       headerName: 'Company', field: 'company', sortable: true,
       filter: true,
-      filterParams: { suppressAndOrCondition: true, filterOptions: ['contains', 'notContains', 'startsWith', 'equals', 'notEqual'] }
+      filterParams: { suppressAndOrCondition: true }
     },
     {
       headerName: 'Start date', field: 'startDate',
@@ -132,32 +132,32 @@ export class AppComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-      this.globalFilterControlSubscription =
-        this.globalFilterControl.valueChanges.subscribe(x => this.globalFilterControlDebouncer.onChange());
-      this.globalFilterControlDebouncer.callback = () => { this.setGlobalFilter(this.globalFilterControl.value); };
-    }
+    this.globalFilterControlSubscription =
+      this.globalFilterControl.valueChanges.subscribe(x => this.globalFilterControlDebouncer.onChange());
+    this.globalFilterControlDebouncer.callback = () => { this.setGlobalFilter(this.globalFilterControl.value); };
+  }
 
   ngOnDestroy(): void {
-      this.globalFilterControlSubscription.unsubscribe();
-    }
+    this.globalFilterControlSubscription.unsubscribe();
+  }
 
   onGridReady(params: any) {
-      this.gridApi = params.api;
-      this.gridApi.setDatasource(this.dataSource);
-    }
+    this.gridApi = params.api;
+    this.gridApi.setDatasource(this.dataSource);
+  }
 
   onRowDoubleClicked = (event: RowDoubleClickedEvent) => {
-      if (event.data) {
-        // tslint:disable-next-line:no-string-literal
-        alert(`Navigate to: ${event.data['id']}.`);
-      }
-    }
-
-  setGlobalFilter = (filterText: string) => {
-      this.globalFilter = filterText;
-      this.gridOptions.api.onFilterChanged();
+    if (event.data) {
+      // tslint:disable-next-line:no-string-literal
+      alert(`Navigate to: ${event.data['id']}.`);
     }
   }
+
+  setGlobalFilter = (filterText: string) => {
+    this.globalFilter = filterText;
+    this.gridOptions.api.onFilterChanged();
+  }
+}
 
 function gridDateFormatter(params: ValueFormatterParams): any {
   const date: Date = params.value;
