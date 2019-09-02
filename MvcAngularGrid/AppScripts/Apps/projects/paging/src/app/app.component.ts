@@ -1,15 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 // tslint:disable-next-line:max-line-length
-import { GridOptions, IDatasource, IGetRowsParams, ValueFormatterParams, ICellRendererParams, RowDoubleClickedEvent } from 'ag-grid-community';
+import { GridOptions, ValueFormatterParams, ICellRendererParams, RowDoubleClickedEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
 import { getLocalizedText } from './locale';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Debouncer } from './debouncer';
-
-// tslint:disable-next-line:prefer-const
-let baseUrl = ''; // the application base path, must be somehow passed to the app
+import { parseNullableDate } from './parseNullableDate';
+import { IDataResponse } from './IDataResponse';
+import { IAgGridDataRequest, PrepareAgGridDataRequest } from './IAgGridDataRequest';
+import { dateFieldFixer } from './dateFileldFixer';
 
 @Component({
   selector: 'app-root',
@@ -19,14 +20,13 @@ let baseUrl = ''; // the application base path, must be somehow passed to the ap
 export class AppComponent implements OnInit, OnDestroy {
 
   constructor (private http: HttpClient) {
-
   }
 
+  url: string = '/data/ep/page';
   globalFilterControl: FormControl = new FormControl();
   globalFilterControlSubscription: Subscription;
   globalFilterControlDebouncer: Debouncer = new Debouncer();
 
-  title = 'Apps';
   localeText = getLocalizedText();
   globalFilter = '';
 
@@ -104,128 +104,60 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   ];
 
-  rowData: any;
-
   gridOptions: GridOptions = {
-    // pagination: true,
     rowModelType: 'infinite',
-    cacheBlockSize: 100, // you can have your custom page size
-    maxBlocksInCache: 10,
+    cacheBlockSize: 100,
+    maxBlocksInCache: 20,
     blockLoadDebounceMillis: 100,
-    // paginationPageSize: 20 // pagesize
   };
-
 
   dataSource: IDatasource = {
     getRows: async (params: IGetRowsParams) => {
-
-      // Use startRow and endRow for sending pagination to Backend
-      // params.startRow : Start Page
-      // params.endRow : End Page
-
-      // replace this.apiService with your Backend Call that returns an Observable
-      // this.apiService().subscribe(response => {
-
-      //   params.successCallback(
-      //     response.data, response.totalRecords
-      //   );
-
-      // })
-
-      console.log(`getRows called with ${params.startRow} to ${params.endRow}.`);
-
       let data: IDataResponse;
+      const requestBody: IAgGridDataRequest = PrepareAgGridDataRequest(params, this.globalFilter);
 
       try {
-        data = await this.loadData(params);
+        data = await this.http.post<IDataResponse>(this.url, requestBody).toPromise();
       } catch (e) {
         params.failCallback();
         return;
       }
 
       // the part replacing ISO date strings with real dates is acually optional,
-      // Angular formatDate handles properly a ISO date string as an input
-
-      // tslint:disable-next-line:prefer-for-of
-      for (let i = 0; i < data.rows.length; i++) {
-        const row: any = data.rows[i];
-        row.startDate = parseNullableDate(row.startDate);
-        row.endDate = parseNullableDate(row.endDate);
-        row.endDateNullable = parseNullableDate(row.endDateNullable);
-      }
-
-      const pageSize = 20;
-
-      const pages = Math.floor(data.count / pageSize);
-
-      console.log(`calling success with ${JSON.stringify(data.rows)} and page count ${pages}.`);
+      // Angular formatDate handles properly an ISO date string as an input
+      dateFieldFixer(data.rows, ['startDate', 'endDate', 'endDateNullable']);
 
       params.successCallback(data.rows, data.count);
-
-
-
     }
   };
 
   ngOnInit() {
-    // this.loadData();
-    this.globalFilterControlSubscription =
-      this.globalFilterControl.valueChanges.subscribe(x => this.globalFilterControlDebouncer.onChange());
-    this.globalFilterControlDebouncer.callback = () => { this.setGlobalFilter(this.globalFilterControl.value); };
-  }
+      this.globalFilterControlSubscription =
+        this.globalFilterControl.valueChanges.subscribe(x => this.globalFilterControlDebouncer.onChange());
+      this.globalFilterControlDebouncer.callback = () => { this.setGlobalFilter(this.globalFilterControl.value); };
+    }
 
   ngOnDestroy(): void {
-    this.globalFilterControlSubscription.unsubscribe();
-  }
+      this.globalFilterControlSubscription.unsubscribe();
+    }
 
   onGridReady(params: any) {
-    console.log(`onGridReady called.`);
-    this.gridApi = params.api;
-    this.gridApi.setDatasource(this.dataSource); // replace dataSource with your datasource
-  }
-
-  async loadData(params: IGetRowsParams): Promise<IDataResponse> {
-    let r: any;
-
-    const url = baseUrl + `/data/ep/page?globalFilter=${this.globalFilter}`;
-
-    console.log(`Fetching from ${url} with ${JSON.stringify(params)}`);
-    r = await this.http.post(url, params).toPromise();
-
-    return r as IDataResponse;
-  }
+      this.gridApi = params.api;
+      this.gridApi.setDatasource(this.dataSource);
+    }
 
   onRowDoubleClicked = (event: RowDoubleClickedEvent) => {
-    if (event.data) {
-      // tslint:disable-next-line:no-string-literal
-      alert(`Navigate to: ${event.data['id']}.\r\nTemporary setting the global filter.`);
-      console.log(`Setting global filter to ${event.data.company}...`);
-      this.globalFilter = event.data.company;
+      if (event.data) {
+        // tslint:disable-next-line:no-string-literal
+        alert(`Navigate to: ${event.data['id']}.`);
+      }
+    }
+
+  setGlobalFilter = (filterText: string) => {
+      this.globalFilter = filterText;
       this.gridOptions.api.onFilterChanged();
     }
   }
-
-  setGlobalFilter = (filterText: string) => {
-    this.globalFilter = filterText;
-    this.gridOptions.api.onFilterChanged();
-  }
-}
-
-
-
-interface IDataResponse {
-  rows: [];
-  count: number;
-}
-
-function parseNullableDate(input: string): Date | null {
-  let r: Date | null = null;
-  if (input) {
-    r = new Date(input);
-  }
-
-  return r;
-}
 
 function gridDateFormatter(params: ValueFormatterParams): any {
   const date: Date = params.value;
@@ -243,7 +175,7 @@ function linkRenderer(params: ICellRendererParams): string {
   if (params.data) {
     // tslint:disable-next-line:no-string-literal
     const id = params.data['id'];
-    const url = baseUrl + `/connection/details/` + id;
+    const url = `/connection/details/` + id;
 
     if (text) {
       r = `<a href="${url}">${text}</a>`;
