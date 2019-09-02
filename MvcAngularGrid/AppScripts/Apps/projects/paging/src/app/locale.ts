@@ -66,6 +66,13 @@ const localeText = {
     ctrlV: 'ctrl + V'
 };
 
-export function getLocalizedText() {
-    return localeText;
+export function getLocalizedText(locale: string) {
+    // tslint:disable-next-line:no-unnecessary-initializer
+    let r: any = undefined;
+
+    if (locale.toLocaleLowerCase() === 'pl') {
+        r = localeText;
+    }
+
+    return r;
 }

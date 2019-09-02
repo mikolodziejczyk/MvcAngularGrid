@@ -7,7 +7,6 @@ import { getLocalizedText } from './locale';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Debouncer } from './debouncer';
-import { parseNullableDate } from './parseNullableDate';
 import { IDataResponse } from './IDataResponse';
 import { IAgGridDataRequest, PrepareAgGridDataRequest } from './IAgGridDataRequest';
 import { dateFieldFixer } from './dateFileldFixer';
@@ -27,7 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
   globalFilterControlSubscription: Subscription;
   globalFilterControlDebouncer: Debouncer = new Debouncer();
 
-  localeText = getLocalizedText();
+  localeText = getLocalizedText('pl');
   globalFilter = '';
 
   private gridApi;
