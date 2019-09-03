@@ -41,7 +41,7 @@ namespace MvcAngularGrid.Controllers
         /// In expressions, enums must be cast to int.
         /// In expressions, nullables can be used as nullables or converted to a non-nullable values.
         /// </summary>
-        IDictionary<string, LambdaExpression> columnSource = new Dictionary<string, LambdaExpression>()
+        static IDictionary<string, LambdaExpression> columnSource = new Dictionary<string, LambdaExpression>()
         {
             { "name", (Expression<Func<Connection, string>>)(x => x.Name)},
             { "ppe",  (Expression<Func<Connection, string>>)(x => x.PPE)},
