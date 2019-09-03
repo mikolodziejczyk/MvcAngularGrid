@@ -22,18 +22,20 @@ namespace MvcAngularGrid.Controllers
         public ActionResult Index()
         {
 
-            string data;
+            //string data;
 
-            using (EnergyPointEntities context = new EnergyPointEntities())
-            {
-                var r = context.Connection.Select(x => new { ppe = x.PPE, meterCode = x.MeterCode, name = x.Name, tariff = x.Tariff.Name, company = x.Company.Acronym }).ToArray();
+            //using (EnergyPointEntities context = new EnergyPointEntities())
+            //{
+            //    var r = context.Connection.Select(x => new { ppe = x.PPE, meterCode = x.MeterCode, name = x.Name, tariff = x.Tariff.Name, company = x.Company.Acronym }).ToArray();
 
-                data = JsonConvert.SerializeObject(r);
+            //    data = JsonConvert.SerializeObject(r);
 
-            }
+            //}
 
 
-            return Content(data, "application/json");
+            //return Content(data, "application/json");
+
+            return View();
         }
 
         /// <summary>
