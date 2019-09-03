@@ -5,10 +5,10 @@ import { GridOptions, ValueFormatterParams, ICellRendererParams, RowDoubleClicke
 import { formatDate } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Debouncer } from './debouncer';
+import { Debouncer } from 'mkoUtils/lib/debouncer';
 import { IDataResponse } from 'AgGridUtilities/lib/IDataResponse';
 import { IAgGridDataRequest, PrepareAgGridDataRequest } from 'AgGridUtilities/lib/IAgGridDataRequest';
-import { dateFieldFixer } from './dateFieldFixer';
+import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
 
 @Component({

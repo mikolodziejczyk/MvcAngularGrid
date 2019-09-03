@@ -23,6 +23,7 @@
     "ag-grid-community": "^21.1.1",
     "aggridlocale": "git+http://github.com/mikolodziejczyk/AgGridLocale.git",
     "aggridutilities": "git+https://github.com/mikolodziejczyk/AgGridUtilities.git",
+    "mkoutils": "git+https://github.com/mikolodziejczyk/MkoUtils.git",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
