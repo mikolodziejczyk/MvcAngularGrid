@@ -3,12 +3,11 @@ import { HttpClient, HttpRequest } from '@angular/common/http';
 // tslint:disable-next-line:max-line-length
 import { GridOptions, ValueFormatterParams, ICellRendererParams, RowDoubleClickedEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
-import { getLocalizedText } from './locale';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Debouncer } from './debouncer';
-import { IDataResponse } from './IDataResponse';
-import { IAgGridDataRequest, PrepareAgGridDataRequest } from './IAgGridDataRequest';
+import { IDataResponse } from 'AgGridUtilities/lib/IDataResponse';
+import { IAgGridDataRequest, PrepareAgGridDataRequest } from 'AgGridUtilities/lib/IAgGridDataRequest';
 import { dateFieldFixer } from './dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
 
