@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Lista przyłączy";
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -14,4 +15,7 @@
 <script src="~/dist/ngApps/connection-list/main-es2015.js" type="module"></script>
 <script src="~/dist/ngApps/connection-list/main-es5.js" nomodule defer></script>
 
-<app-root></app-root>
+<div style="height: calc(100vh - 88px)">
+    <app-root>
+    </app-root>
+</div>
