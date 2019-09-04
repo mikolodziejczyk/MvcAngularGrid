@@ -17,11 +17,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/connection-list",
+            "outputPath": "../../dist/ngApps/connection-list",
             "index": "projects/connection-list/src/index.html",
             "main": "projects/connection-list/src/main.ts",
             "polyfills": "projects/connection-list/src/polyfills.ts",
             "tsConfig": "projects/connection-list/tsconfig.app.json",
+            "extractCss": true,
+            "vendorChunk": false,
             "aot": false,
             "assets": [
               "projects/connection-list/src/favicon.ico",
@@ -49,7 +51,6 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "outputPath": "../../dist/ngApps/connection-list",
               "budgets": [
                 {
                   "type": "initial",
