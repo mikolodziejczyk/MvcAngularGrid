@@ -1,12 +1,10 @@
 ﻿@{
     ViewBag.Title = "Lista przyłączy";
-    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    Layout = "~/Views/Shared/_LayoutNg.cshtml";
 }
 
-<h2>@ViewBag.Title</h2>
-
 @* Move this to head section when possible *@
-<link rel="stylesheet" href="~/dist/ngApps/connection-list/styles.css"/>
+<link rel="stylesheet" href="~/dist/ngApps/connection-list/styles.css" />
 
 <script src="~/dist/ngApps/connection-list/runtime-es2015.js" type="module"></script>
 <script src="~/dist/ngApps/connection-list/polyfills-es2015.js" type="module"></script>
@@ -15,7 +13,6 @@
 <script src="~/dist/ngApps/connection-list/main-es2015.js" type="module"></script>
 <script src="~/dist/ngApps/connection-list/main-es5.js" nomodule defer></script>
 
-<div style="height: calc(100vh - 88px)">
-    <app-root>
-    </app-root>
-</div>
+
+<app-root>
+</app-root>
