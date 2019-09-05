@@ -203,7 +203,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\List.cshtml" />
     <Content Include="Views\Ep\Index.cshtml" />
-    <Content Include="Views\Shared\_LayoutNg.cshtml" />
+    <Content Include="Views\Shared\_LayoutNgFullHeight.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AppScripts\" />
