@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
 // tslint:disable-next-line:max-line-length
-import { GridOptions, ValueFormatterParams, ICellRendererParams, RowDoubleClickedEvent, IDatasource, IGetRowsParams } from 'ag-grid-community';
+import { GridOptions, ValueFormatterParams, ICellRendererParams, RowDoubleClickedEvent, IDatasource, IGetRowsParams, NumberFilter } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -188,3 +188,23 @@ function gridDateFormatter(params: ValueFormatterParams): any {
   }
   return r;
 }
+
+
+
+const stringToFloat = (value: string): number => {
+  let filterText = value || null;
+  if (filterText && filterText.trim() === '') {
+    filterText = null;
+  }
+  let newFilter: number;
+  if (filterText !== null && filterText !== undefined) {
+    filterText = filterText.replace(',', '.');
+    newFilter = parseFloat(filterText);
+  } else {
+    newFilter = null;
+  }
+  return newFilter;
+};
+
+// tslint:disable-next-line:no-string-literal
+NumberFilter.prototype['stringToFloat'] = stringToFloat;
