@@ -7,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Debouncer } from 'mkoUtils/lib/debouncer';
 import { IDataResponse } from 'AgGridUtilities/lib/IDataResponse';
+import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/localizeNumberFilterDecimalSeparator';
 import { IAgGridDataRequest, PrepareAgGridDataRequest } from 'AgGridUtilities/lib/IAgGridDataRequest';
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
@@ -189,22 +190,4 @@ function gridDateFormatter(params: ValueFormatterParams): any {
   return r;
 }
 
-
-
-const stringToFloat = (value: string): number => {
-  let filterText = value || null;
-  if (filterText && filterText.trim() === '') {
-    filterText = null;
-  }
-  let newFilter: number;
-  if (filterText !== null && filterText !== undefined) {
-    filterText = filterText.replace(',', '.');
-    newFilter = parseFloat(filterText);
-  } else {
-    newFilter = null;
-  }
-  return newFilter;
-};
-
-// tslint:disable-next-line:no-string-literal
-NumberFilter.prototype['stringToFloat'] = stringToFloat;
+localizeNumberFilterDecimalSeparator();
