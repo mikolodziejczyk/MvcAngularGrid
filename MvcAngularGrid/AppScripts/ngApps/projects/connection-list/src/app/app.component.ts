@@ -48,29 +48,29 @@ export class AppComponent implements OnInit, OnDestroy {
       filterParams: { suppressAndOrCondition: true }
     },
     {
-      headerName: 'MeterCode', field: 'meterCode',
+      headerName: 'Kodl licznika', field: 'meterCode',
       cellRenderer: (params: ICellRendererParams) => this.linkRenderer(params),
       sortable: true,
       filter: true,
       filterParams: { suppressAndOrCondition: true }
     },
     {
-      headerName: 'Name', field: 'name', sortable: true,
+      headerName: 'Nazwa', field: 'name', sortable: true,
       filter: true,
       filterParams: { suppressAndOrCondition: true }
     },
     {
-      headerName: 'Tariff', field: 'tariff', sortable: true,
+      headerName: 'Taryfa', field: 'tariff', sortable: true,
       filter: true,
       filterParams: { suppressAndOrCondition: true }
     },
     {
-      headerName: 'Company', field: 'company', sortable: true,
+      headerName: 'Firma', field: 'company', sortable: true,
       filter: true,
       filterParams: { suppressAndOrCondition: true }
     },
     {
-      headerName: 'Start date', field: 'startDate',
+      headerName: 'Data od', field: 'startDate',
       cellClass: ['text-center'],
       valueFormatter: gridDateFormatter,
       sortable: true,
@@ -78,7 +78,7 @@ export class AppComponent implements OnInit, OnDestroy {
       filterParams: { suppressAndOrCondition: true }
     },
     {
-      headerName: 'End date', field: 'endDate',
+      headerName: 'Data do', field: 'endDate',
       cellClass: ['text-center'],
       valueFormatter: gridDateFormatter,
       sortable: true,
@@ -86,13 +86,13 @@ export class AppComponent implements OnInit, OnDestroy {
       filterParams: { suppressAndOrCondition: true }
     },
     {
-      headerName: 'Ordered capacity', field: 'orderedCapacity', sortable: true,
+      headerName: 'Moc zamówiona', field: 'orderedCapacity', sortable: true,
       cellClass: ['text-right'],
       filter: 'agNumberColumnFilter',
       filterParams: { suppressAndOrCondition: true }
     },
     {
-      headerName: 'End date nullable', field: 'endDateNullable',
+      headerName: 'Data do (n)', field: 'endDateNullable',
       cellClass: ['text-center'],
       valueFormatter: gridDateFormatter,
       sortable: true,
@@ -100,7 +100,7 @@ export class AppComponent implements OnInit, OnDestroy {
       filterParams: { suppressAndOrCondition: true }
     },
     {
-      headerName: 'Ordered capacity nullable', field: 'orderedCapacityNullable', sortable: true,
+      headerName: 'Moc zamówiona (n)', field: 'orderedCapacityNullable', sortable: true,
       cellClass: ['text-right'],
       filter: 'agNumberColumnFilter',
       filterParams: { suppressAndOrCondition: true }
