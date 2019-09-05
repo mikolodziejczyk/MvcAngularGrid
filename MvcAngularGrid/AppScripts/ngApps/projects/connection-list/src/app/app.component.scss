@@ -11,6 +11,10 @@ div.app-container {
     flex-direction: row;
     justify-content: flex-end;
 
+    div.actions {
+      flex-grow: 1;
+    }
+
     div.search {
       input.search-term {
         width: 10em;
