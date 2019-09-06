@@ -113,6 +113,8 @@ export class AppComponent implements OnInit, OnDestroy {
     // cacheBlockSize: 100,
     // maxBlocksInCache: 20,
     // blockLoadDebounceMillis: 100,
+
+    // the functions reference below don't preserve this so that we add this preservation
     isExternalFilterPresent: () => this.isExternalFilterPresent(),
     doesExternalFilterPass: (node: any) => this.doesExternalFilterPass(node)
   };
@@ -131,6 +133,8 @@ export class AppComponent implements OnInit, OnDestroy {
     // Angular formatDate handles properly an ISO date string as an input
     dateFieldFixer(data as [], ['startDate', 'endDate', 'endDateNullable']);
 
+    // now we want to create ["searchValue"] for every row, that is concatenated lower-case text
+
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < data.length; i++) {
       data[i].searchValue = getRowSearchValue(data[i]);
@@ -140,6 +144,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // here the global filter is applied client-side, with few rows we can have shorter debounce time
     this.globalFilterControlDebouncer.timeout = 300;
 
     this.globalFilterControlSubscription =
@@ -165,6 +170,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Called when the text value in the global fiter input changes, debounced */
   setGlobalFilter = (filterText: string) => {
     if (filterText) {
       filterText = filterText.toLocaleLowerCase();
@@ -173,12 +179,17 @@ export class AppComponent implements OnInit, OnDestroy {
     this.gridApi.onFilterChanged();
   }
 
-  isExternalFilterPresent() {
+  /** Whether the global filter (called by the ag grid "external") is applied */
+  isExternalFilterPresent(): boolean {
     return !!this.globalFilter;
   }
 
+  /** Whether a particular node passes the global ("external") filter */
   doesExternalFilterPass(node: any): boolean {
+    // the actual row is in node.data
+    // we want the searchValue from it (note: searchValue is generated client-side)
     const s = node.data.searchValue as string;
+    // the filter passes if the searchValue contains the global filter phrase, this.globalFilter is already lower case
     return s.indexOf(this.globalFilter) !== -1;
   }
 
@@ -210,6 +221,9 @@ function gridDateFormatter(params: ValueFormatterParams): any {
   return r;
 }
 
+/** Gets a value to be searched against for a row. This is concatenated text from all text columns, converted to locale lowercase.
+ * The value is then stored in the row, like any other column.
+ */
 function getRowSearchValue(row: any) {
   let searchValue: string = row.ppe || '';
   searchValue += (row.meterCode || '') + ' ';
