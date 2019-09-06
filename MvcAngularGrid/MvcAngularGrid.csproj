@@ -205,11 +205,11 @@
     <Content Include="Views\Home\List.cshtml" />
     <Content Include="Views\Ep\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutNgFullHeight.cshtml" />
+    <Content Include="Views\EpNp\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AppScripts\" />
     <Folder Include="App_Data\" />
-    <Folder Include="Views\EpNp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

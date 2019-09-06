@@ -141,12 +141,14 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/connection-list-np",
+            "outputPath": "../../dist/ngApps/connection-list-np",
             "index": "projects/connection-list-np/src/index.html",
             "main": "projects/connection-list-np/src/main.ts",
             "polyfills": "projects/connection-list-np/src/polyfills.ts",
             "tsConfig": "projects/connection-list-np/tsconfig.app.json",
             "aot": false,
+            "extractCss": true,
+            "vendorChunk": false,
             "assets": [
               "projects/connection-list-np/src/favicon.ico",
               "projects/connection-list-np/src/assets"
@@ -165,7 +167,7 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
