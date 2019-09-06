@@ -159,7 +159,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   setGlobalFilter = (filterText: string) => {
     this.globalFilter = filterText;
-    this.gridOptions.api.onFilterChanged();
+    this.gridApi.onFilterChanged();
   }
 
   linkRenderer(params: ICellRendererParams): string {
