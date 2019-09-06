@@ -7,7 +7,6 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Debouncer } from 'mkoUtils/lib/debouncer';
 import { IDataResponse } from 'AgGridUtilities/lib/IDataResponse';
-import { IAgGridDataRequest, PrepareAgGridDataRequest } from 'AgGridUtilities/lib/IAgGridDataRequest';
 import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/localizeNumberFilterDecimalSeparator';
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
@@ -22,9 +21,11 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor (private http: HttpClient) {
   }
 
-  dataUrl: string = '/data/ep/page';
-  newUrl: string = '/ep/new';
-  displayUrl: string = '/ep/details/';
+  dataUrl: string = '/data/epnp/connections';
+  newUrl: string = '/epnp/new';
+  displayUrl: string = '/epnp/details/';
+
+  rowData: any;
 
   globalFilterControl: FormControl = new FormControl();
   globalFilterControlSubscription: Subscription;
@@ -108,36 +109,35 @@ export class AppComponent implements OnInit, OnDestroy {
   ];
 
   gridOptions: GridOptions = {
-    rowModelType: 'infinite',
-    cacheBlockSize: 100,
-    maxBlocksInCache: 20,
-    blockLoadDebounceMillis: 100,
+    // rowModelType: 'infinite',
+    // cacheBlockSize: 100,
+    // maxBlocksInCache: 20,
+    // blockLoadDebounceMillis: 100,
   };
 
-  dataSource: IDatasource = {
-    getRows: async (params: IGetRowsParams) => {
-      let data: IDataResponse;
-      const requestBody: IAgGridDataRequest = PrepareAgGridDataRequest(params, this.globalFilter);
+  async getData() {
+    let data: [];
 
-      try {
-        data = await this.http.post<IDataResponse>(this.dataUrl, requestBody).toPromise();
-      } catch (e) {
-        params.failCallback();
-        return;
-      }
-
-      // the part replacing ISO date strings with real dates is acually optional,
-      // Angular formatDate handles properly an ISO date string as an input
-      dateFieldFixer(data.rows, ['startDate', 'endDate', 'endDateNullable']);
-
-      params.successCallback(data.rows, data.count);
+    try {
+      data = await this.http.get<[]>(this.dataUrl).toPromise();
+    } catch (e) {
+      alert('Loading data failed.');
+      return;
     }
-  };
+
+    // the part replacing ISO date strings with real dates is acually optional,
+    // Angular formatDate handles properly an ISO date string as an input
+    dateFieldFixer(data, ['startDate', 'endDate', 'endDateNullable']);
+
+    this.rowData = data;
+  }
 
   ngOnInit() {
     this.globalFilterControlSubscription =
       this.globalFilterControl.valueChanges.subscribe(x => this.globalFilterControlDebouncer.onChange());
     this.globalFilterControlDebouncer.callback = () => { this.setGlobalFilter(this.globalFilterControl.value); };
+
+    this.getData();
   }
 
   ngOnDestroy(): void {
@@ -146,7 +146,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onGridReady(params: any) {
     this.gridApi = params.api;
-    this.gridApi.setDatasource(this.dataSource);
   }
 
   onRowDoubleClicked = (event: RowDoubleClickedEvent) => {
@@ -159,7 +158,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   setGlobalFilter = (filterText: string) => {
     this.globalFilter = filterText;
-    this.gridOptions.api.onFilterChanged();
+    this.gridApi.onFilterChanged();
   }
 
   linkRenderer(params: ICellRendererParams): string {
