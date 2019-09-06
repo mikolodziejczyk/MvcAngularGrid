@@ -250,6 +250,128 @@
           }
         }
       }
+    },
+    "connection-list-npcs": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/connection-list-npcs",
+      "sourceRoot": "projects/connection-list-npcs/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/connection-list-npcs",
+            "index": "projects/connection-list-npcs/src/index.html",
+            "main": "projects/connection-list-npcs/src/main.ts",
+            "polyfills": "projects/connection-list-npcs/src/polyfills.ts",
+            "tsConfig": "projects/connection-list-npcs/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "projects/connection-list-npcs/src/favicon.ico",
+              "projects/connection-list-npcs/src/assets"
+            ],
+            "styles": [
+              "projects/connection-list-npcs/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/connection-list-npcs/src/environments/environment.ts",
+                  "with": "projects/connection-list-npcs/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "connection-list-npcs:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "connection-list-npcs:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "connection-list-npcs:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/connection-list-npcs/src/test.ts",
+            "polyfills": "projects/connection-list-npcs/src/polyfills.ts",
+            "tsConfig": "projects/connection-list-npcs/tsconfig.spec.json",
+            "karmaConfig": "projects/connection-list-npcs/karma.conf.js",
+            "assets": [
+              "projects/connection-list-npcs/src/favicon.ico",
+              "projects/connection-list-npcs/src/assets"
+            ],
+            "styles": [
+              "projects/connection-list-npcs/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/connection-list-npcs/tsconfig.app.json",
+              "projects/connection-list-npcs/tsconfig.spec.json",
+              "projects/connection-list-npcs/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/connection-list-npcs/e2e/protractor.conf.js",
+            "devServerTarget": "connection-list-npcs:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "connection-list-npcs:serve:production"
+            }
+          }
+        }
+      }
     }},
   "defaultProject": "connection-list"
 }
