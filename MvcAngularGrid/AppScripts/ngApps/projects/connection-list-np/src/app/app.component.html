@@ -1,0 +1,21 @@
+<div class="app-container">
+  <div class="header">
+    <h2>Connection list</h2>
+  </div>
+  <div class="actions-container">
+    <div class="actions">
+      <a class="btn btn-success" [href]="newUrl" role="button"><span
+          class="glyphicon glyphicon-plus-sign"></span>&nbsp;Nowy</a>
+    </div>
+    <div class="search">
+      <div class="input-group">
+        <input type="text" class="form-control search-term" placeholder="znajdź..." [formControl]="globalFilterControl">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+      </div>
+    </div>
+  </div>
+  <ag-grid-angular class="ag-grid ag-theme-balham" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+    [gridOptions]="gridOptions" [localeText]="localeText" [enableCellTextSelection]="true"
+    (gridReady)="onGridReady($event);" (rowDoubleClicked)="onRowDoubleClicked($event);">
+  </ag-grid-angular>
+</div>

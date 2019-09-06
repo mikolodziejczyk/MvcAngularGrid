@@ -1,0 +1,35 @@
+div.app-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    align-content: stretch;
+  
+    div.actions-container {
+      margin: 10px 5px 10px 5px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+  
+      div.actions {
+        flex-grow: 1;
+      }
+  
+      div.search {
+        input.search-term {
+          width: 10em;
+        }
+      }
+    }
+  
+    .ag-grid {
+      flex: 1 1 200px;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  
+  :host {
+    height: 100%;
+  }
+  
