@@ -113,10 +113,12 @@ export class AppComponent implements OnInit, OnDestroy {
     // cacheBlockSize: 100,
     // maxBlocksInCache: 20,
     // blockLoadDebounceMillis: 100,
+    isExternalFilterPresent: () => this.isExternalFilterPresent(),
+    doesExternalFilterPass: (node: any) => this.doesExternalFilterPass(node)
   };
 
   async getData() {
-    let data: [];
+    let data: any[];
 
     try {
       data = await this.http.get<[]>(this.dataUrl).toPromise();
@@ -127,12 +129,19 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // the part replacing ISO date strings with real dates is acually optional,
     // Angular formatDate handles properly an ISO date string as an input
-    dateFieldFixer(data, ['startDate', 'endDate', 'endDateNullable']);
+    dateFieldFixer(data as [], ['startDate', 'endDate', 'endDateNullable']);
+
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < data.length; i++) {
+      data[i].searchValue = getRowSearchValue(data[i]);
+    }
 
     this.rowData = data;
   }
 
   ngOnInit() {
+    this.globalFilterControlDebouncer.timeout = 300;
+
     this.globalFilterControlSubscription =
       this.globalFilterControl.valueChanges.subscribe(x => this.globalFilterControlDebouncer.onChange());
     this.globalFilterControlDebouncer.callback = () => { this.setGlobalFilter(this.globalFilterControl.value); };
@@ -157,8 +166,20 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   setGlobalFilter = (filterText: string) => {
+    if (filterText) {
+      filterText = filterText.toLocaleLowerCase();
+    }
     this.globalFilter = filterText;
     this.gridApi.onFilterChanged();
+  }
+
+  isExternalFilterPresent() {
+    return !!this.globalFilter;
+  }
+
+  doesExternalFilterPass(node: any): boolean {
+    const s = node.data.searchValue as string;
+    return s.indexOf(this.globalFilter) !== -1;
   }
 
   linkRenderer(params: ICellRendererParams): string {
@@ -189,5 +210,16 @@ function gridDateFormatter(params: ValueFormatterParams): any {
   return r;
 }
 
+function getRowSearchValue(row: any) {
+  let searchValue: string = row.ppe || '';
+  searchValue += (row.meterCode || '') + ' ';
+  searchValue += (row.name || '') + ' ';
+  searchValue += (row.tariff || '') + ' ';
+  searchValue += (row.company || '') + ' ';
+  searchValue = searchValue.toLocaleLowerCase();
+  return searchValue;
+}
+
 
 localizeNumberFilterDecimalSeparator();
+
