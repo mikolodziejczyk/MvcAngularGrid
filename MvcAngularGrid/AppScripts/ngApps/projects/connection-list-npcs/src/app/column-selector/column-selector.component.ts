@@ -1,7 +1,7 @@
 /// <reference path="../../../../../node_modules/popper.js/index.d.ts" />
 import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
 import Popper from 'popper.js/dist/popper';
-import { ICheckboxEntry } from './iCheckBoxEntry';
+import { ICheckboxEntry } from '../iCheckBoxEntry';
 
 @Component({
   selector: 'app-column-selector',

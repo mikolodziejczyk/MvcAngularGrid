@@ -1,0 +1,7 @@
+<div #popup class="cs-popup" [class.active]="isVisible" ngForm #myControl="ngForm">
+    <div *ngFor="let entry of entries; let i=index" class="checkbox">
+        <label>
+            <input [name]="entry.id" type="checkbox" [(ngModel)]="entry.value" /> {{ entry.label}}
+        </label>
+    </div>
+</div>

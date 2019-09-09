@@ -10,7 +10,8 @@ import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/locali
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
 import { ColumnSelectorComponent } from './column-selector/column-selector.component';
-import { ICheckboxEntry } from './column-selector/iCheckBoxEntry';
+import { ICheckboxEntry } from './iCheckBoxEntry';
+import { CheckBoxListPopupComponent } from './check-box-list-popup/check-box-list-popup.component';
 
 @Component({
   selector: 'app-root',
@@ -122,24 +123,34 @@ export class AppComponent implements OnInit, OnDestroy {
   };
 
 
-  @ViewChild('columnSelectorPopup', { static: false }) private columnSelectorPopup: ColumnSelectorComponent;
+  @ViewChild('columnSelectorPopup', { static: false }) private columnSelectorPopup: CheckBoxListPopupComponent;
+  columnVisibilityControl: FormControl = new FormControl();
+  columnVisibilityControlSubscription: Subscription;
+
+  updateColumnsVisibility = (entries: ICheckboxEntry[]) => {
+      // tslint:disable-next-line:prefer-for-of
+      for (const entry of entries) {
+        this.gridColumnApi.setColumnVisible(entry.id, entry.value);
+      }
+  }
 
   selectColumns = (event: UIEvent) => {
     if (this.columnSelectorPopup.isVisible) {
       this.columnSelectorPopup.close();
 
       // tslint:disable-next-line:prefer-for-of
-      for (const entry of this.columnSelectorPopup.entries) {
-        this.gridColumnApi.setColumnVisible(entry.id, entry.value);
-      }
+      // for (const entry of this.entries) {
+      //   this.gridColumnApi.setColumnVisible(entry.id, entry.value);
+      // }
 
     } else {
 
-      const entries: ICheckboxEntry[] = this.gridColumnApi.getAllGridColumns()
+      const entries = this.gridColumnApi.getAllGridColumns()
         // tslint:disable-next-line:only-arrow-functions
         .map(function(x) { return { id: x.colId, label: x.colDef.headerName, value: x.visible }; });
 
-      this.columnSelectorPopup.entries = entries;
+      // this.columnSelectorPopup.entries = entries;
+      this.columnVisibilityControl.setValue(entries);
 
       this.columnSelectorPopup.open(event.target as HTMLElement);
     }
@@ -177,11 +188,14 @@ export class AppComponent implements OnInit, OnDestroy {
       this.globalFilterControl.valueChanges.subscribe(x => this.globalFilterControlDebouncer.onChange());
     this.globalFilterControlDebouncer.callback = () => { this.setGlobalFilter(this.globalFilterControl.value); };
 
+    this.columnVisibilityControlSubscription = this.columnVisibilityControl.valueChanges.subscribe(x => this.updateColumnsVisibility(x));
+
     this.getData();
   }
 
   ngOnDestroy(): void {
     this.globalFilterControlSubscription.unsubscribe();
+    this.columnVisibilityControlSubscription.unsubscribe();
   }
 
   onGridReady(params: any) {

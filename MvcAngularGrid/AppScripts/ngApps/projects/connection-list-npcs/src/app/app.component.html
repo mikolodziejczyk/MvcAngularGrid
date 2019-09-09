@@ -23,4 +23,4 @@
     (gridReady)="onGridReady($event);" (rowDoubleClicked)="onRowDoubleClicked($event);">
   </ag-grid-angular>
 </div>
-<app-column-selector #columnSelectorPopup></app-column-selector>
+<app-check-box-list-popup #columnSelectorPopup [formControl]="columnVisibilityControl" ></app-check-box-list-popup>
