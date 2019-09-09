@@ -1,8 +1,7 @@
 <div #popup class="cs-popup" [class.active]="isVisible">
-    This is <br />
-    Sample <br />
-    This is <br />
-    Sample <br />
-    This is <br />
-    Sample <br />
+    <div *ngFor="let entry of entries; let i=index" class="checkbox">
+        <label>
+          <input type="checkbox" [(ngModel)]="entry.value" /> {{ entry.label}}
+        </label>
+      </div>
 </div>

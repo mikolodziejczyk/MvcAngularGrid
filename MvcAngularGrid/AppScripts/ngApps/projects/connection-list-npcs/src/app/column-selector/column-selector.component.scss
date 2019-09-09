@@ -8,6 +8,8 @@ div.cs-popup {
   z-index: 100;
   display: none;
 
+  padding: 5px;
+
   &.active {
     display: block;
   }

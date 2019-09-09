@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 
 import { AgGridModule } from 'ag-grid-angular';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ColumnSelectorComponent } from './column-selector/column-selector.component';
 
 @NgModule({
@@ -17,6 +17,7 @@ import { ColumnSelectorComponent } from './column-selector/column-selector.compo
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
     AgGridModule.withComponents([])
   ],
   providers: [],

@@ -10,6 +10,7 @@ import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/locali
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
 import { ColumnSelectorComponent } from './column-selector/column-selector.component';
+import { ICheckboxEntry } from './column-selector/iCheckBoxEntry';
 
 @Component({
   selector: 'app-root',
@@ -126,7 +127,20 @@ export class AppComponent implements OnInit, OnDestroy {
   selectColumns = (event: UIEvent) => {
     if (this.columnSelectorPopup.isVisible) {
       this.columnSelectorPopup.close();
+
+      // tslint:disable-next-line:prefer-for-of
+      for (const entry of this.columnSelectorPopup.entries) {
+        this.gridColumnApi.setColumnVisible(entry.id, entry.value);
+      }
+
     } else {
+
+      const entries: ICheckboxEntry[] = this.gridColumnApi.getAllGridColumns()
+        // tslint:disable-next-line:only-arrow-functions
+        .map(function(x) { return { id: x.colId, label: x.colDef.headerName, value: x.visible }; });
+
+      this.columnSelectorPopup.entries = entries;
+
       this.columnSelectorPopup.open(event.target as HTMLElement);
     }
   }

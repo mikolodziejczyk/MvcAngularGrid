@@ -1,6 +1,7 @@
 /// <reference path="../../../../../node_modules/popper.js/index.d.ts" />
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
 import Popper from 'popper.js/dist/popper';
+import { ICheckboxEntry } from './iCheckBoxEntry';
 
 @Component({
   selector: 'app-column-selector',
@@ -12,6 +13,11 @@ export class ColumnSelectorComponent implements OnInit {
   constructor () { }
 
   isVisible: boolean = false;
+  @Input() entries: ICheckboxEntry[] = [
+    { id: 'ppe', label: 'Ppe', value: true },
+    { id: 'meterCode', label: 'Kod licznika', value: true },
+    { id: 'company', label: 'Firma', value: true },
+  ];
 
   // column selector
   @ViewChild('popup', { static: false }) private popup: ElementRef;
