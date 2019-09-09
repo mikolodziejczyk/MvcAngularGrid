@@ -24,6 +24,7 @@
     "aggridlocale": "git+https://github.com/mikolodziejczyk/AgGridLocale.git",
     "aggridutilities": "git+https://github.com/mikolodziejczyk/AgGridUtilities.git",
     "mkoutils": "git+https://github.com/mikolodziejczyk/MkoUtils.git",
+    "popper.js": "^1.15.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"

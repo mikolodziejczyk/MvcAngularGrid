@@ -9,6 +9,7 @@ import { Debouncer } from 'mkoUtils/lib/debouncer';
 import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/localizeNumberFilterDecimalSeparator';
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
+import { ColumnSelectorComponent } from './column-selector/column-selector.component';
 
 @Component({
   selector: 'app-root',
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
   globalFilter = '';
 
   private gridApi;
+  private gridColumnApi;
 
   defaultColDef = {
     resizable: true
@@ -118,18 +120,15 @@ export class AppComponent implements OnInit, OnDestroy {
     doesExternalFilterPass: (node: any) => this.doesExternalFilterPass(node)
   };
 
-  // column selector
-  @ViewChild('columnSelectorPopup', {static: false}) private columnSelectorPopup: ElementRef;
-  @ViewChild('columnsButton', {static: false}) private columnsButton: ElementRef;
 
-  csActive: boolean = false;
+  @ViewChild('columnSelectorPopup', { static: false }) private columnSelectorPopup: ColumnSelectorComponent;
 
-  openColumnSelector = () => {
-    this.csActive = !this.csActive;
-
-    // var popperInstance = new Popper(reference, popper, {
-    //   // popper options here
-    // });
+  selectColumns = (event: UIEvent) => {
+    if (this.columnSelectorPopup.isVisible) {
+      this.columnSelectorPopup.close();
+    } else {
+      this.columnSelectorPopup.open(event.target as HTMLElement);
+    }
   }
 
   async getData() {
@@ -173,6 +172,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onGridReady(params: any) {
     this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
   }
 
   onRowDoubleClicked = (event: RowDoubleClickedEvent) => {

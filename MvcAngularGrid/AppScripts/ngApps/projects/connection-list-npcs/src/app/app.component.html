@@ -7,8 +7,11 @@
       <a class="btn btn-success" [href]="newUrl" role="button"><span
           class="glyphicon glyphicon-plus-sign"></span>&nbsp;Nowy</a>
     </div>
+    <div class="gridOptions">
+      <button #columnsButton id="columnsButton" class="btn btn-success" (click)="selectColumns($event);">Kolumny</button>
+    </div>
     <div class="search">
-      <button id="columnsButton" class="btn btn-success" (click)="openColumnSelector();">Kolumny</button>
+
       <div class="input-group">
         <input type="text" class="form-control search-term" placeholder="znajdź..." [formControl]="globalFilterControl">
         <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
@@ -20,12 +23,4 @@
     (gridReady)="onGridReady($event);" (rowDoubleClicked)="onRowDoubleClicked($event);">
   </ag-grid-angular>
 </div>
-
-<div #columnSelectorPopup class="cs-popup"  [class.active]="csActive">
-  This is <br/>
-  Sample <br/>
-  This is <br/>
-  Sample <br/>
-  This is <br/>
-  Sample <br/>
-</div>
+<app-column-selector #columnSelectorPopup></app-column-selector>

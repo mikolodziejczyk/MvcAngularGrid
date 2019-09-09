@@ -1,0 +1,14 @@
+div.cs-popup {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  min-width: 200px;
+  background: white;
+  border: 1px solid gray;
+  z-index: 100;
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}

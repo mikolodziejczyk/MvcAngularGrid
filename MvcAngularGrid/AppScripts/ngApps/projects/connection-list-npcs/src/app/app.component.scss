@@ -15,6 +15,11 @@ div.app-container {
       flex-grow: 1;
     }
 
+    div.gridOptions button {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+
     div.search {
       input.search-term {
         width: 10em;
@@ -31,19 +36,4 @@ div.app-container {
 
 :host {
   height: 100%;
-}
-
-div.cs-popup {
-  position: absolute;
-  left: 10px;
-  top: 10px;
-  min-width: 200px;
-  background: white;
-  border: 1px solid gray;
-  z-index: 1;
-  display: none;
-
-  &.active {
-    display: block;
-  }
 }
