@@ -11,8 +11,8 @@ import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
 import { CheckBoxListPopupComponent } from './check-box-list-popup/check-box-list-popup.component';
 import { GridStateStorageServiceService } from './grid-state-storage-service.service';
-import { IGridState } from './iGridState';
-import { GridStateHelper } from './gridStateHelper';
+import { IGridState } from 'AgGridUtilities/lib/gridState/iGridState';
+import { GridStateHelper } from 'AgGridUtilities/lib/gridState/gridStateHelper';
 
 @Component({
   selector: 'app-root',

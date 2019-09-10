@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IGridState } from './iGridState';
+import { IGridState } from 'AgGridUtilities/lib/gridState/iGridState';
 
 @Injectable({
   providedIn: 'root'
