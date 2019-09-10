@@ -24,15 +24,19 @@ export class CheckBoxListPopupComponent implements OnInit, OnDestroy, AfterViewI
 
   isVisible: boolean = false;
 
-  @Input() entries: ICheckboxEntry[] = [
-    { id: 'ppe', label: 'Ppe', value: true },
-    { id: 'meterCode', label: 'Kod licznika', value: true },
-    { id: 'company', label: 'Firma', value: true },
-  ];
+  // @Input() entries: ICheckboxEntry[] = [
+  //   { id: 'ppe', label: 'Ppe', value: true },
+  //   { id: 'meterCode', label: 'Kod licznika', value: true },
+  //   { id: 'company', label: 'Firma', value: true },
+  // ];
 
   // column selector
   @ViewChild('popup', { static: false }) private popup: ElementRef;
   @ViewChild('myControl', { static: false }) myControl: NgForm;
+
+
+  @Input() labels: string[];
+  @Input() values: boolean[];
 
   myControlChangeSubcription: Subscription;
 
@@ -42,7 +46,10 @@ export class CheckBoxListPopupComponent implements OnInit, OnDestroy, AfterViewI
 
   ngAfterViewInit(): void {
     this.myControlChangeSubcription = this.myControl.valueChanges.subscribe(x => {
-      window.setTimeout( () => { this.propagateChange(this.entries); this.onTouched(); }, 1);
+      window.setTimeout( () => {
+        this.propagateChange(this.values);
+        this.onTouched();
+      }, 1);
     });
   }
 
@@ -68,8 +75,8 @@ export class CheckBoxListPopupComponent implements OnInit, OnDestroy, AfterViewI
     if (value === undefined) {
       value = []; // normalize undefined to null
     }
-    if (this.entries !== value) {
-      this.entries = value;
+    if (this.values !== value) {
+      this.values = value;
     }
   }
 
