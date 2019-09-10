@@ -27,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
   dataUrl: string = '/data/epnp/connections';
   newUrl: string = '/epnp/new';
   displayUrl: string = '/epnp/details/';
+  /** The unique identifier of this grid, for loading and saving state. */
   gridId: string = 'list/connections/index';
 
   rowData: any;
@@ -126,14 +127,17 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   @ViewChild('columnSelectorPopup', { static: false }) private columnSelectorPopup: CheckBoxListPopupComponent;
+  /** The control inside the popup, that is column checkbox list - exposed to get the value changes. */
   columnVisibilityControl: FormControl = new FormControl();
   columnVisibilityControlSubscription: Subscription;
 
+  /** Gets all grid column labels */
   get columnLabels(): string[] {
     const labels: string[] = this.gridColumnApi.getAllGridColumns().map(x => x.colDef.headerName);
     return labels;
   }
 
+  /** Called whenerver user checks / unchecks a column in the popup. Applies the array of the column visiblity into the grid. */
   updateColumnsVisibility = (values: boolean[]) => {
     const columnIds: string[] = this.gridColumnApi.getAllGridColumns().map(x => x.colId);
     // tslint:disable-next-line:prefer-for-of
@@ -142,6 +146,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** This is a button hander. We need event.target for the popup placement */
   selectColumns = (event: UIEvent) => {
     if (this.columnSelectorPopup.isVisible) {
       this.columnSelectorPopup.close();

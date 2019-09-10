@@ -1,10 +1,10 @@
 /// <reference path="../../../../../node_modules/popper.js/index.d.ts" />
 import { Component, OnInit, ElementRef, ViewChild, Input, OnDestroy, AfterViewInit, forwardRef } from '@angular/core';
 import Popper from 'popper.js/dist/popper';
-import { ICheckboxEntry } from '../iCheckBoxEntry';
 import { NgForm, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
+/** A checkbox list inside a popup. Consider refactoring into separate components. */
 @Component({
   selector: 'app-check-box-list-popup',
   templateUrl: './check-box-list-popup.component.html',
@@ -23,12 +23,6 @@ export class CheckBoxListPopupComponent implements OnInit, OnDestroy, AfterViewI
   constructor () { }
 
   isVisible: boolean = false;
-
-  // @Input() entries: ICheckboxEntry[] = [
-  //   { id: 'ppe', label: 'Ppe', value: true },
-  //   { id: 'meterCode', label: 'Kod licznika', value: true },
-  //   { id: 'company', label: 'Firma', value: true },
-  // ];
 
   // column selector
   @ViewChild('popup', { static: false }) private popup: ElementRef;
