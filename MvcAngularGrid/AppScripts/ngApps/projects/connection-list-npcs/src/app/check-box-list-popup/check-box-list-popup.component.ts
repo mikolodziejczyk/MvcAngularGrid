@@ -46,7 +46,7 @@ export class CheckBoxListPopupComponent implements OnInit, OnDestroy, AfterViewI
 
   ngAfterViewInit(): void {
     this.myControlChangeSubcription = this.myControl.valueChanges.subscribe(x => {
-      window.setTimeout( () => {
+      window.setTimeout(() => {
         this.propagateChange(this.values);
         this.onTouched();
       }, 1);
@@ -59,6 +59,7 @@ export class CheckBoxListPopupComponent implements OnInit, OnDestroy, AfterViewI
 
 
   open = (referenceElement: HTMLElement) => {
+    document.addEventListener('mousedown', this.mouseDown);
     this.isVisible = true;
 
     const popperInstance = new Popper(referenceElement, this.popup.nativeElement, {
@@ -69,6 +70,24 @@ export class CheckBoxListPopupComponent implements OnInit, OnDestroy, AfterViewI
 
   close = () => {
     this.isVisible = false;
+    document.removeEventListener('mousedown', this.mouseDown);
+  }
+
+  mouseDown = (event: MouseEvent): void => {
+    // determine if popup element is an ancestor of the clicked element
+    const popupElement = this.popup.nativeElement;
+    let current = event.target as Element;
+    let found = false;
+    for (; current !== null; current = current.parentElement) {
+      if (current === popupElement) {
+        found = true;
+      }
+    }
+
+    // if not, close the popup
+    if (!found) {
+      this.close();
+    }
   }
 
   writeValue(value: any) {
