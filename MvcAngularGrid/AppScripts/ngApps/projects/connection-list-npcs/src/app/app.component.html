@@ -8,7 +8,16 @@
           class="glyphicon glyphicon-plus-sign"></span>&nbsp;Nowy</a>
     </div>
     <div class="gridOptions">
-      <button #columnsButton id="columnsButton" class="btn btn-success" (click)="selectColumns($event);"><span
+      <button class="btn btn-default" (click)="resetGridState();" title="Przywróć ustawienia domyślne" ><span class="glyphicon glyphicon-erase"
+          aria-hidden="true"></span></button>
+
+      <button class="btn btn-default" (click)="restoreGridState();"  title="Przywróć ostatnio zapisane ustawienia listy"><span class="glyphicon glyphicon-floppy-open"
+          aria-hidden="true"></span></button>
+
+      <button class="btn btn-default" (click)="saveGridState();"  title="Zapisz ustawienia listy"><span class="glyphicon glyphicon-floppy-save"
+          aria-hidden="true"></span></button>
+
+      <button #columnsButton id="columnsButton" class="btn btn-default" (click)="selectColumns($event);"  title="Wybierz kolumny"><span
           class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></button>
     </div>
     <div class="search">

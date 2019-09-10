@@ -10,6 +10,9 @@ import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/locali
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
 import { CheckBoxListPopupComponent } from './check-box-list-popup/check-box-list-popup.component';
+import { GridStateStorageServiceService } from './grid-state-storage-service.service';
+import { IGridState } from './iGridState';
+import { GridStateHelper } from './gridStateHelper';
 
 @Component({
   selector: 'app-root',
@@ -18,12 +21,13 @@ import { CheckBoxListPopupComponent } from './check-box-list-popup/check-box-lis
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  constructor (private http: HttpClient) {
+  constructor (private http: HttpClient, private statestorage: GridStateStorageServiceService) {
   }
 
   dataUrl: string = '/data/epnp/connections';
   newUrl: string = '/epnp/new';
   displayUrl: string = '/epnp/details/';
+  gridId: string = 'list/connections/index';
 
   rowData: any;
 
@@ -184,8 +188,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.globalFilterControlDebouncer.callback = () => { this.setGlobalFilter(this.globalFilterControl.value); };
 
     this.columnVisibilityControlSubscription = this.columnVisibilityControl.valueChanges.subscribe(x => this.updateColumnsVisibility(x));
-
-    this.getData();
   }
 
   ngOnDestroy(): void {
@@ -196,6 +198,34 @@ export class AppComponent implements OnInit, OnDestroy {
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
+    this.getGridStateAndData();
+  }
+
+  async getGridStateAndData() {
+    const gridState: IGridState = await this.statestorage.load(this.gridId);
+    if (gridState) {
+      GridStateHelper.setState(this.gridApi, this.gridColumnApi, gridState);
+    }
+
+    this.getData();
+  }
+
+  saveGridState = async () => {
+    const gridState = GridStateHelper.getState(this.gridApi, this.gridColumnApi);
+    this.statestorage.save(this.gridId, gridState);
+  }
+
+  restoreGridState = async () => {
+    const gridState: IGridState = await this.statestorage.load(this.gridId);
+    if (gridState) {
+      GridStateHelper.setState(this.gridApi, this.gridColumnApi, gridState);
+    } else {
+      GridStateHelper.resetState(this.gridApi, this.gridColumnApi);
+    }
+  }
+
+  resetGridState = () => {
+    GridStateHelper.resetState(this.gridApi, this.gridColumnApi);
   }
 
   onRowDoubleClicked = (event: RowDoubleClickedEvent) => {
