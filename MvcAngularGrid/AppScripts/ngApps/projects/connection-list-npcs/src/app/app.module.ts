@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 
@@ -18,7 +20,9 @@ import { CheckBoxListPopupComponent } from './check-box-list-popup/check-box-lis
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    AgGridModule.withComponents([])
+    BrowserAnimationsModule,
+    AgGridModule.withComponents([]),
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

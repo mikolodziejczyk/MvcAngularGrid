@@ -13,6 +13,7 @@ import { CheckBoxListPopupComponent } from './check-box-list-popup/check-box-lis
 import { GridStateStorageServiceService } from './grid-state-storage-service.service';
 import { IGridState } from 'AgGridUtilities/lib/gridState/iGridState';
 import { GridStateHelper } from 'AgGridUtilities/lib/gridState/gridStateHelper';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,7 @@ import { GridStateHelper } from 'AgGridUtilities/lib/gridState/gridStateHelper';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  constructor (private http: HttpClient, private statestorage: GridStateStorageServiceService) {
+  constructor (private http: HttpClient, private statestorage: GridStateStorageServiceService, private toastr: ToastrService) {
   }
 
   dataUrl: string = '/data/epnp/connections';
@@ -218,6 +219,8 @@ export class AppComponent implements OnInit, OnDestroy {
   saveGridState = async () => {
     const gridState = GridStateHelper.getState(this.gridApi, this.gridColumnApi);
     this.statestorage.save(this.gridId, gridState);
+    this.toastr.success('Bieżące ustawienia listy zostały zapisane i będą wczytywane automatycznie przy kolejnym uruchomieniu.',
+    'Zapisano');
   }
 
   restoreGridState = async () => {
@@ -231,6 +234,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   resetGridState = () => {
     GridStateHelper.resetState(this.gridApi, this.gridColumnApi);
+    // tslint:disable-next-line:max-line-length
+    this.toastr.info('Przywrócono ustawienia fabryczne listy. Aby przy kolejnym uruchomieniu pojawiły sie one automatycznie, zapisz bieżący widok.',
+    'Przywrócono');
   }
 
   onRowDoubleClicked = (event: RowDoubleClickedEvent) => {

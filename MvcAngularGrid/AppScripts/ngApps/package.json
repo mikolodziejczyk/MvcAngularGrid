@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~8.2.0",
+    "@angular/animations": "^8.2.5",
     "@angular/common": "~8.2.0",
     "@angular/compiler": "~8.2.0",
     "@angular/core": "~8.2.0",
@@ -24,6 +24,7 @@
     "aggridlocale": "git+https://github.com/mikolodziejczyk/AgGridLocale.git",
     "aggridutilities": "git+https://github.com/mikolodziejczyk/AgGridUtilities.git",
     "mkoutils": "git+https://github.com/mikolodziejczyk/MkoUtils.git",
+    "ngx-toastr": "^10.2.0",
     "popper.js": "^1.15.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
