@@ -9,9 +9,15 @@ export class GridStateStorageServiceService {
 
   constructor (private http: HttpClient) { }
 
-  async save(gridId: string, gridState: IGridState) {
-    const url: string = '/data/listsettings/savelistsettings';
+  static saveUrl: string = '/data/listsettings/savelistsettings';
+  static loadUrl: string = '/data/listsettings/getlistsettings';
 
+  /**
+   * Saves the grid state to the server. Returns a promise that resolves when completed, without any data.
+   * @param gridId The string that identifies the view, e.g. like 'connections/index'
+   * @param gridState The grid settings
+   */
+  async save(gridId: string, gridState: IGridState) {
     const gridStateAsString = JSON.stringify(gridState);
 
     const dataObject = {
@@ -19,17 +25,20 @@ export class GridStateStorageServiceService {
       settings: gridStateAsString
     };
 
-    return this.http.post(url, dataObject).toPromise();
+    return this.http.post(GridStateStorageServiceService.saveUrl, dataObject).toPromise();
   }
 
+  /**
+   * Loads the grid state from the server. Returns a promise that resolves to IGridState
+   * or null (when there has been no entry on the server).
+   * @param gridId The string that identifies the view
+   */
   async load(gridId: string): Promise<IGridState> {
-    const url: string = '/data/listsettings/getlistsettings';
-
     const dataObject = {
       viewId: gridId
     };
 
-    const valueAsString = await this.http.post<string>(url, dataObject).toPromise();
+    const valueAsString = await this.http.post<string>(GridStateStorageServiceService.loadUrl, dataObject).toPromise();
 
     let value: IGridState = null;
 
