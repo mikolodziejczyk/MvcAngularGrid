@@ -76,6 +76,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -144,16 +146,35 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AngularGrid.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AngularGrid.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AngularGrid.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AngularGrid.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AngularGrid.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AngularGrid.edmx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\EpController.cs" />
     <Compile Include="Controllers\EpNpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ListSettingsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="JsonNetResult.cs" />
+    <Compile Include="ListSettings.cs">
+      <DependentUpon>AngularGrid.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\AgGrid\FilterEntry.cs" />
     <Compile Include="Models\AgGrid\FilterEntryConverter.cs" />
     <Compile Include="Models\AgGrid\FilterOperatorParser.cs" />
@@ -164,9 +185,20 @@
     <Compile Include="Models\ExpressionList\SortHelper.cs" />
     <Compile Include="Models\ExpressionList\UniversalFilterEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\ListSettingsRepository.cs" />
     <Compile Include="Repository\ConnectionRepository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AngularGrid.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AngularGrid.edmx</DependentUpon>
+      <LastGenOutput>AngularGrid.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="AngularGrid.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AngularGrid.edmx</DependentUpon>
+      <LastGenOutput>AngularGrid.cs</LastGenOutput>
+    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -177,6 +209,13 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EntityDeploy Include="AngularGrid.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AngularGrid.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="AngularGrid.edmx.diagram">
+      <DependentUpon>AngularGrid.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -210,6 +249,7 @@
   <ItemGroup>
     <Folder Include="AppScripts\" />
     <Folder Include="App_Data\" />
+    <Folder Include="Views\ListSettings\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -223,6 +263,9 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -218,7 +218,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   saveGridState = async () => {
     const gridState = GridStateHelper.getState(this.gridApi, this.gridColumnApi);
-    this.statestorage.save(this.gridId, gridState);
+    await this.statestorage.save(this.gridId, gridState);
     this.toastr.success('Bieżące ustawienia listy zostały zapisane i będą wczytywane automatycznie przy kolejnym uruchomieniu.',
     'Zapisano');
   }
