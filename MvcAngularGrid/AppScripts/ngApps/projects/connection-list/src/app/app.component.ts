@@ -109,7 +109,7 @@ export class AppComponent implements OnInit, OnDestroy {
       headerName: 'Aktywne', field: 'isActive',
       sortable: true,
       cellClass: ['text-center'],
-      // valueFormatter: gridBooleanFormatter,
+      valueFormatter: gridBooleanFormatter,
       // filter: 'booleanGridFilter'
     }
   ];
@@ -196,5 +196,20 @@ function gridDateFormatter(params: ValueFormatterParams): any {
   }
   return r;
 }
+
+function gridBooleanFormatter(params: ValueFormatterParams): any {
+  const value: boolean = params.value;
+  let r: string = null; // note that the value can be null
+
+  if (value === true) {
+    r = 'tak';
+  }
+  if (value === false) {
+    r = 'nie';
+  }
+
+  return r;
+}
+
 
 localizeNumberFilterDecimalSeparator();
