@@ -112,6 +112,12 @@ export class AppComponent implements OnInit, OnDestroy {
       cellClass: ['text-right'],
       filter: 'agNumberColumnFilter',
       filterParams: { suppressAndOrCondition: true }
+    },
+    {
+      headerName: 'Aktywne', field: 'isActive',
+      sortable: true,
+      cellClass: ['text-center'],
+      valueFormatter: gridBooleanFormatter,
     }
   ];
 
@@ -295,6 +301,21 @@ function gridDateFormatter(params: ValueFormatterParams): any {
   }
   return r;
 }
+
+function gridBooleanFormatter(params: ValueFormatterParams): any {
+  const value: boolean = params.value;
+  let r: string = null; // note that the value can be null
+
+  if (value === true) {
+    r = 'tak';
+  }
+  if (value === false) {
+    r = 'nie';
+  }
+
+  return r;
+}
+
 
 /** Gets a value to be searched against for a row. This is concatenated text from all text columns, converted to locale lowercase.
  * The value is then stored in the row, like any other column.

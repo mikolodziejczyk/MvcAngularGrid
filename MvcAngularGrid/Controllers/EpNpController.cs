@@ -39,6 +39,7 @@ namespace MvcAngularGrid.Controllers
                 orderedCapacity = x.OrderedCapacity,
                 endDateNullable = x.EndDate,
                 orderedCapacityNullable = x.OrderedCapacity,
+                isActive = x.Name.Length % 2 == 0 // fake boolean column
             }).ToArray();
 
             return new JsonNetResult(r);
