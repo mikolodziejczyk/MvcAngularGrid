@@ -16,7 +16,7 @@ export class BooleanGridFilterComponent implements OnInit {
   // tslint:disable-next-line:ban-types
   private hidePopup: Function = null;
   // raw value from checkboxes
-  public inputValue: string = '';
+  public rawValue: string = '';
   // cooked value from checkboxes
   public value: boolean;
   public hasValue: boolean;
@@ -35,21 +35,10 @@ export class BooleanGridFilterComponent implements OnInit {
   }
 
   doesFilterPass(params: IDoesFilterPassParams): boolean {
-      const rowBoolean = this.valueGetter(params.node) as boolean;
-
-      // console.log(
-      //     `does pass: ${this.valueGetter(
-      //         params.node
-      //     )}, rowB ${rowBoolean}, b ${this.value}`
-      // );
-
-      return rowBoolean === this.value;
-
+      return (this.valueGetter(params.node) as boolean) === this.value;
   }
 
   getModel(): any {
-      console.log('getModel() called.');
-
       let r: any = null;
 
       if (this.hasValue) {
@@ -64,18 +53,10 @@ export class BooleanGridFilterComponent implements OnInit {
   }
 
   setModel(model: any): void {
-      console.log(`setModel() with  ${JSON.stringify(model)} called.`);
       if (model) {
       this.hasValue = true;
       this.value = model.value;
       }
-  }
-
-  // noinspection JSMethodCanBeStatic
-  componentMethod(message: string): void {
-      // alert(`Alert from PartialMatchFilterComponent ${message}`);
-      console.log(`The current value is ${this.inputValue}`);
-      console.log(`The current cooked value is ${this.value}, hasValue ${this.hasValue}`);
   }
 
   onChange(newValue): void {
