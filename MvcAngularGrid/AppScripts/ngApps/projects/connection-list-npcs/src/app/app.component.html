@@ -34,7 +34,9 @@
   </div>
   <ag-grid-angular class="ag-grid ag-theme-balham" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
     [gridOptions]="gridOptions" [localeText]="localeText" [enableCellTextSelection]="true" [rowData]="rowData"
-    (gridReady)="onGridReady($event);" (rowDoubleClicked)="onRowDoubleClicked($event);">
+    (gridReady)="onGridReady($event);" (rowDoubleClicked)="onRowDoubleClicked($event);"
+    [frameworkComponents]="frameworkComponents"
+    >
   </ag-grid-angular>
 </div>
 <app-check-box-list-popup #columnSelectorPopup [formControl]="columnVisibilityControl"></app-check-box-list-popup>

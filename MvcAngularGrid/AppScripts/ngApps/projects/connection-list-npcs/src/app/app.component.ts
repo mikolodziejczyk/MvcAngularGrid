@@ -14,6 +14,7 @@ import { GridStateStorageServiceService } from './grid-state-storage-service.ser
 import { IGridState } from 'AgGridUtilities/lib/gridState/iGridState';
 import { GridStateHelper } from 'AgGridUtilities/lib/gridState/gridStateHelper';
 import { ToastrService } from 'ngx-toastr';
+import { BooleanGridFilterComponent } from './boolean-grid-filter/boolean-grid-filter.component';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,7 @@ import { ToastrService } from 'ngx-toastr';
 export class AppComponent implements OnInit, OnDestroy {
 
   constructor (private http: HttpClient, private statestorage: GridStateStorageServiceService, private toastr: ToastrService) {
+    this.frameworkComponents = { booleanGridFilter: BooleanGridFilterComponent };
   }
 
   dataUrl: string = '/data/epnp/connections';
@@ -39,6 +41,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   localeText = localeText_pl;
   globalFilter = '';
+
+  frameworkComponents: any;
 
   private gridApi;
   private gridColumnApi;
@@ -118,6 +122,8 @@ export class AppComponent implements OnInit, OnDestroy {
       sortable: true,
       cellClass: ['text-center'],
       valueFormatter: gridBooleanFormatter,
+      filter: 'booleanGridFilter',
+      menuTabs: ['filterMenuTab']
     }
   ];
 
