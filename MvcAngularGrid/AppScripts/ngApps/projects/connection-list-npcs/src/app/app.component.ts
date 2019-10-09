@@ -122,8 +122,7 @@ export class AppComponent implements OnInit, OnDestroy {
       sortable: true,
       cellClass: ['text-center'],
       valueFormatter: gridBooleanFormatter,
-      filter: 'booleanGridFilter',
-      menuTabs: ['filterMenuTab']
+      filter: 'booleanGridFilter'
     }
   ];
 
