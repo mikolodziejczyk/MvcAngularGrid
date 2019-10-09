@@ -104,6 +104,13 @@ export class AppComponent implements OnInit, OnDestroy {
       cellClass: ['text-right'],
       filter: 'agNumberColumnFilter',
       filterParams: { suppressAndOrCondition: true }
+    },
+    {
+      headerName: 'Aktywne', field: 'isActive',
+      sortable: true,
+      cellClass: ['text-center'],
+      // valueFormatter: gridBooleanFormatter,
+      // filter: 'booleanGridFilter'
     }
   ];
 

@@ -54,7 +54,8 @@ namespace MvcAngularGrid.Controllers
             { "endDate",  (Expression<Func<Connection, DateTime>>)(x => x.EndDate ?? new DateTime(1990,01,01))},
             { "orderedCapacity",  (Expression<Func<Connection, decimal>>)(x => x.OrderedCapacity ?? -1)},
             { "endDateNullable",  (Expression<Func<Connection, DateTime?>>)(x => x.EndDate)},
-            { "orderedCapacityNullable",  (Expression<Func<Connection, decimal?>>)(x => x.OrderedCapacity)}
+            { "orderedCapacityNullable",  (Expression<Func<Connection, decimal?>>)(x => x.OrderedCapacity)},
+            { "isActive", (Expression<Func<Connection, bool>>)(x => x.Name.Length % 2 == 0)}
         };
         private readonly Repository.ConnectionRepository connectionRepository;
 
@@ -120,6 +121,7 @@ namespace MvcAngularGrid.Controllers
                     orderedCapacity = x.OrderedCapacity,
                     endDateNullable = x.EndDate,
                     orderedCapacityNullable = x.OrderedCapacity,
+                    isActive = x.Name.Length % 2 == 0 // fake boolean column
                 }).ToArray();
 
 
