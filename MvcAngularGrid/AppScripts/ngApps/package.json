@@ -21,6 +21,7 @@
     "@angular/router": "~8.2.0",
     "ag-grid-angular": "^21.2.0",
     "ag-grid-community": "^21.2.0",
+    "ag-grid-support-lib": "file://gl-dev-02/NpmRegistry/ag-grid-support-lib/ag-grid-support-lib-0.0.1.tgz",
     "aggridlocale": "git+https://github.com/mikolodziejczyk/AgGridLocale.git",
     "aggridutilities": "git+https://github.com/mikolodziejczyk/AgGridUtilities.git",
     "mkoutils": "git+https://github.com/mikolodziejczyk/MkoUtils.git",
