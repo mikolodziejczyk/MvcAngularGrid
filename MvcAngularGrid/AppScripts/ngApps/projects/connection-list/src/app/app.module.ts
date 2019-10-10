@@ -5,17 +5,22 @@ import { AppComponent } from './app.component';
 
 import { AgGridModule } from 'ag-grid-angular';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { BooleanGridFilterComponent } from './boolean-grid-filter/boolean-grid-filter.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BooleanGridFilterComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    AgGridModule.withComponents([])
+    FormsModule,
+    BrowserAnimationsModule,
+    AgGridModule.withComponents([BooleanGridFilterComponent])
   ],
   providers: [],
   bootstrap: [AppComponent]

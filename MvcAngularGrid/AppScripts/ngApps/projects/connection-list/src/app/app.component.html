@@ -16,6 +16,8 @@
   </div>
   <ag-grid-angular class="ag-grid ag-theme-balham" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
     [gridOptions]="gridOptions" [localeText]="localeText" [enableCellTextSelection]="true"
-    (gridReady)="onGridReady($event);" (rowDoubleClicked)="onRowDoubleClicked($event);">
+    (gridReady)="onGridReady($event);" (rowDoubleClicked)="onRowDoubleClicked($event);"
+    [frameworkComponents]="frameworkComponents"
+    >
   </ag-grid-angular>
 </div>

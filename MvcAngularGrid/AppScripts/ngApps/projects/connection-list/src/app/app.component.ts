@@ -11,6 +11,7 @@ import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/locali
 import { IAgGridDataRequest, PrepareAgGridDataRequest } from 'AgGridUtilities/lib/IAgGridDataRequest';
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
+import { BooleanGridFilterComponent } from './boolean-grid-filter/boolean-grid-filter.component';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ import { localeText_pl } from 'aggridlocale/lib/pl';
 export class AppComponent implements OnInit, OnDestroy {
 
   constructor (private http: HttpClient) {
+    this.frameworkComponents = { booleanGridFilter: BooleanGridFilterComponent };
   }
 
   dataUrl: string = '/data/ep/page';
@@ -32,6 +34,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   localeText = localeText_pl;
   globalFilter = '';
+
+  frameworkComponents: any;
 
   private gridApi;
 
@@ -110,7 +114,7 @@ export class AppComponent implements OnInit, OnDestroy {
       sortable: true,
       cellClass: ['text-center'],
       valueFormatter: gridBooleanFormatter,
-      // filter: 'booleanGridFilter'
+      filter: 'booleanGridFilter'
     }
   ];
 
