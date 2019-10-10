@@ -56,9 +56,11 @@ export class BooleanGridFilterComponent implements OnInit {
         if (model) {
             this.value = model.filter;
             this.hasValue = true;
+            this.rawValue = model.filter.toString();
         } else {
             // when model is null/undefined we should clear the filter
             this.hasValue = false;
+            this.rawValue = '';
         }
     }
 
