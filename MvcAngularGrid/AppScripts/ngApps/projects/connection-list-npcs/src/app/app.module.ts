@@ -9,7 +9,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CheckBoxListPopupComponent } from './check-box-list-popup/check-box-list-popup.component';
-import { BooleanGridFilterComponent, AgGridSupportLibModule } from 'ag-grid-support-lib/esm2015/public-api';
+import { BooleanGridFilterComponent, BooleanGridFilterModule } from 'ag-grid-support-lib/esm2015/public-api';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,7 @@ import { BooleanGridFilterComponent, AgGridSupportLibModule } from 'ag-grid-supp
     ReactiveFormsModule,
     FormsModule,
     BrowserAnimationsModule,
-    AgGridSupportLibModule,
+    BooleanGridFilterModule,
     AgGridModule.withComponents([BooleanGridFilterComponent]),
     ToastrModule.forRoot()
   ],
