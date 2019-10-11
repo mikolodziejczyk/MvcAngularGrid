@@ -11,7 +11,7 @@ import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/locali
 import { IAgGridDataRequest, PrepareAgGridDataRequest } from 'AgGridUtilities/lib/IAgGridDataRequest';
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
-import { BooleanGridFilterComponent } from './boolean-grid-filter/boolean-grid-filter.component';
+import { BooleanGridFilterComponent } from 'ag-grid-support-lib/esm2015/public-api';
 
 @Component({
   selector: 'app-root',
