@@ -14,7 +14,7 @@ import { GridStateStorageServiceService } from './grid-state-storage-service.ser
 import { IGridState } from 'AgGridUtilities/lib/gridState/iGridState';
 import { GridStateHelper } from 'AgGridUtilities/lib/gridState/gridStateHelper';
 import { ToastrService } from 'ngx-toastr';
-import { BooleanGridFilterComponent } from 'ag-grid-support-lib/esm2015/public-api';
+import { BooleanGridFilterComponent } from 'ag-grid-support-lib';
 
 @Component({
   selector: 'app-root',
