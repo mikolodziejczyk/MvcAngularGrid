@@ -9,7 +9,7 @@ import { Debouncer } from 'mkoUtils/lib/debouncer';
 import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/localizeNumberFilterDecimalSeparator';
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
-import { CheckBoxListPopupComponent } from 'mko-ng-components/esm2015/public-api';
+import { CheckBoxListPopupComponent } from 'mko-ng-components';
 import { GridStateStorageServiceService } from './grid-state-storage-service.service';
 import { IGridState } from 'AgGridUtilities/lib/gridState/iGridState';
 import { GridStateHelper } from 'AgGridUtilities/lib/gridState/gridStateHelper';

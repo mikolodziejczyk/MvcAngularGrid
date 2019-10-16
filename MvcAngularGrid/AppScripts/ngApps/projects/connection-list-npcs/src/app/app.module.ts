@@ -8,8 +8,8 @@ import { AppComponent } from './app.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CheckBoxListPopupComponent, CheckBoxListPopupModule } from 'mko-ng-components/esm2015/public-api';
-import { BooleanGridFilterComponent, BooleanGridFilterModule } from 'ag-grid-support-lib/esm2015/public-api';
+import { CheckBoxListPopupModule } from 'mko-ng-components';
+import { BooleanGridFilterComponent, BooleanGridFilterModule } from 'ag-grid-support-lib';
 
 @NgModule({
   declarations: [
