@@ -24,7 +24,7 @@
     "ag-grid-support-lib": "file://gl-dev-02/NpmRegistry/ag-grid-support-lib/ag-grid-support-lib-0.0.1.tgz",
     "aggridlocale": "git+https://github.com/mikolodziejczyk/AgGridLocale.git",
     "aggridutilities": "git+https://github.com/mikolodziejczyk/AgGridUtilities.git",
-    "mko-ng-components": "file://gl-dev-02/NpmRegistry/mko-ng-components/mko-ng-components-0.0.1.tgz",
+    "mko-ng-components": "file://GL-DEV-02/NpmRegistry/mko-ng-components/mko-ng-components-0.0.3.tgz",
     "mkoutils": "git+https://github.com/mikolodziejczyk/MkoUtils.git",
     "ngx-toastr": "^10.2.0",
     "popper.js": "^1.15.0",
