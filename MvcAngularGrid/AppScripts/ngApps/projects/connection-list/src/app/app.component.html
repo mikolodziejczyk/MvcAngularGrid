@@ -7,6 +7,12 @@
       <a class="btn btn-success" [href]="newUrl" role="button"><span
           class="glyphicon glyphicon-plus-sign"></span>&nbsp;Nowy</a>
     </div>
+
+    <div class="gridOptions">
+      <button class="btn btn-default" (click)="selectColumns($event);" title="Wybierz kolumny"><span
+          class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></button>
+    </div>
+
     <div class="search">
       <div class="input-group">
         <input type="text" class="form-control search-term" placeholder="znajdź..." [formControl]="globalFilterControl">
@@ -14,10 +20,12 @@
       </div>
     </div>
   </div>
+  
   <ag-grid-angular class="ag-grid ag-theme-balham" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
     [gridOptions]="gridOptions" [localeText]="localeText" [enableCellTextSelection]="true"
     (gridReady)="onGridReady($event);" (rowDoubleClicked)="onRowDoubleClicked($event);"
-    [frameworkComponents]="frameworkComponents"
-    >
+    [frameworkComponents]="frameworkComponents">
   </ag-grid-angular>
 </div>
+<lib-mkong-check-box-list-popup #columnSelectorPopup [formControl]="columnVisibilityControl">
+</lib-mkong-check-box-list-popup>

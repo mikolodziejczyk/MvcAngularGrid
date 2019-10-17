@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
 // tslint:disable-next-line:max-line-length
 import { GridOptions, ValueFormatterParams, ICellRendererParams, RowDoubleClickedEvent, IDatasource, IGetRowsParams, NumberFilter } from 'ag-grid-community';
@@ -12,6 +12,7 @@ import { IAgGridDataRequest, PrepareAgGridDataRequest } from 'AgGridUtilities/li
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
 import { BooleanGridFilterComponent } from 'ag-grid-support-lib/esm2015/public-api';
+import { CheckBoxListPopupComponent } from 'mko-ng-components';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
   frameworkComponents: any;
 
   private gridApi;
+  private gridColumnApi;
 
   defaultColDef = {
     resizable: true
@@ -145,18 +147,54 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   };
 
+  columnVisibilityControl: FormControl = new FormControl();
+  columnVisibilityControlSubscription: Subscription;
+  @ViewChild('columnSelectorPopup', { static: false }) private columnSelectorPopup: CheckBoxListPopupComponent;
+
+  get columnLabels(): string[] {
+    const labels: string[] = this.gridColumnApi.getAllGridColumns().map(x => x.colDef.headerName);
+    return labels;
+  }
+
+  /** This is a button hander. We need event.target for the popup placement */
+  selectColumns = (event: UIEvent) => {
+    if (this.columnSelectorPopup.isVisible) {
+      this.columnSelectorPopup.close();
+    } else {
+      const values: boolean[] = this.gridColumnApi.getAllGridColumns().map(x => x.visible);
+
+      this.columnSelectorPopup.labels = this.columnLabels;
+      this.columnVisibilityControl.setValue(values);
+
+      this.columnSelectorPopup.open(event.target as HTMLElement);
+    }
+  }
+
+  updateColumnsVisibility = (values: boolean[]) => {
+    const columnIds: string[] = this.gridColumnApi.getAllGridColumns().map(x => x.colId);
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < values.length; i++) {
+      this.gridColumnApi.setColumnVisible(columnIds[i], values[i]);
+    }
+  }
+
+
   ngOnInit() {
     this.globalFilterControlSubscription =
       this.globalFilterControl.valueChanges.subscribe(x => this.globalFilterControlDebouncer.onChange());
     this.globalFilterControlDebouncer.callback = () => { this.setGlobalFilter(this.globalFilterControl.value); };
+
+    this.columnVisibilityControlSubscription = this.columnVisibilityControl.valueChanges.subscribe(x => this.updateColumnsVisibility(x));
   }
 
   ngOnDestroy(): void {
     this.globalFilterControlSubscription.unsubscribe();
+    this.columnVisibilityControlSubscription.unsubscribe();
   }
 
   onGridReady(params: any) {
     this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
     this.gridApi.setDatasource(this.dataSource);
   }
 
