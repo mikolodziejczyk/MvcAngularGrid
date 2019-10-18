@@ -10,11 +10,10 @@ import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/locali
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
 import { CheckBoxListPopupComponent } from 'mko-ng-components';
-import { GridStateStorageServiceService } from './grid-state-storage-service.service';
 import { IGridState } from 'AgGridUtilities/lib/gridState/iGridState';
 import { GridStateHelper } from 'AgGridUtilities/lib/gridState/gridStateHelper';
 import { ToastrService } from 'ngx-toastr';
-import { BooleanGridFilterComponent } from 'ag-grid-support-lib';
+import { BooleanGridFilterComponent, GridStateStorageService } from 'ag-grid-support-lib';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +22,7 @@ import { BooleanGridFilterComponent } from 'ag-grid-support-lib';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  constructor (private http: HttpClient, private statestorage: GridStateStorageServiceService, private toastr: ToastrService) {
+  constructor (private http: HttpClient, private statestorage: GridStateStorageService, private toastr: ToastrService) {
     this.frameworkComponents = { booleanGridFilter: BooleanGridFilterComponent };
   }
 
