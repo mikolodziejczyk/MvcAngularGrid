@@ -9,6 +9,19 @@
     </div>
 
     <div class="gridOptions">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+          title="Zapisywanie i przywracanie ustawień.">
+          <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="javascript:;" (click)="saveGridState();">Zapisz ustawienia</a></li>
+          <li><a href="javascript:;" (click)="restoreGridState();">Przywróć ostatnio zapisane</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="javascript:;" (click)="resetGridState();">Przywróć ustawienia domyślne</a></li>
+        </ul>
+      </div>
+
       <button class="btn btn-default" (click)="selectColumns($event);" title="Wybierz kolumny"><span
           class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></button>
     </div>
@@ -20,7 +33,7 @@
       </div>
     </div>
   </div>
-  
+
   <ag-grid-angular class="ag-grid ag-theme-balham" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
     [gridOptions]="gridOptions" [localeText]="localeText" [enableCellTextSelection]="true"
     (gridReady)="onGridReady($event);" (rowDoubleClicked)="onRowDoubleClicked($event);"

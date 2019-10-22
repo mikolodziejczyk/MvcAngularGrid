@@ -11,8 +11,11 @@ import { localizeNumberFilterDecimalSeparator } from 'AgGridUtilities/lib/locali
 import { IAgGridDataRequest, PrepareAgGridDataRequest } from 'AgGridUtilities/lib/IAgGridDataRequest';
 import { dateFieldFixer } from 'mkoUtils/lib/dateFieldFixer';
 import { localeText_pl } from 'aggridlocale/lib/pl';
-import { BooleanGridFilterComponent } from 'ag-grid-support-lib/esm2015/public-api';
+import { BooleanGridFilterComponent, GridStateStorageService } from 'ag-grid-support-lib';
 import { CheckBoxListPopupComponent } from 'mko-ng-components';
+import { ToastrService } from 'ngx-toastr';
+import { GridStateHelper } from 'AgGridUtilities/lib/gridState/gridStateHelper';
+import { IGridState } from 'AgGridUtilities/lib/gridState/iGridState';
 
 @Component({
   selector: 'app-root',
@@ -21,13 +24,15 @@ import { CheckBoxListPopupComponent } from 'mko-ng-components';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  constructor (private http: HttpClient) {
+  constructor (private http: HttpClient, private statestorage: GridStateStorageService, private toastr: ToastrService) {
     this.frameworkComponents = { booleanGridFilter: BooleanGridFilterComponent };
   }
 
   dataUrl: string = '/data/ep/page';
   newUrl: string = '/ep/new';
   displayUrl: string = '/ep/details/';
+  /** The unique identifier of this grid, for loading and saving state. */
+  gridId: string = 'list/connections/index?server-side';
 
   globalFilterControl: FormControl = new FormControl();
   globalFilterControlSubscription: Subscription;
@@ -195,7 +200,40 @@ export class AppComponent implements OnInit, OnDestroy {
   onGridReady(params: any) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
+    // this.gridApi.setDatasource(this.dataSource);
+    this.getGridStateAndData();
+  }
+
+  async getGridStateAndData() {
+    const gridState: IGridState = await this.statestorage.load(this.gridId);
+    if (gridState) {
+      GridStateHelper.setState(this.gridApi, this.gridColumnApi, gridState);
+    }
+
     this.gridApi.setDatasource(this.dataSource);
+  }
+
+  saveGridState = async () => {
+    const gridState = GridStateHelper.getState(this.gridApi, this.gridColumnApi);
+    await this.statestorage.save(this.gridId, gridState);
+    this.toastr.success('Bieżące ustawienia listy zostały zapisane i będą wczytywane automatycznie przy kolejnym uruchomieniu.',
+    'Zapisano');
+  }
+
+  restoreGridState = async () => {
+    const gridState: IGridState = await this.statestorage.load(this.gridId);
+    if (gridState) {
+      GridStateHelper.setState(this.gridApi, this.gridColumnApi, gridState);
+    } else {
+      GridStateHelper.resetState(this.gridApi, this.gridColumnApi);
+    }
+  }
+
+  resetGridState = () => {
+    GridStateHelper.resetState(this.gridApi, this.gridColumnApi);
+    // tslint:disable-next-line:max-line-length
+    this.toastr.info('Przywrócono ustawienia fabryczne listy. Aby przy kolejnym uruchomieniu pojawiły sie one automatycznie, zapisz bieżący widok.',
+    'Przywrócono');
   }
 
   onRowDoubleClicked = (event: RowDoubleClickedEvent) => {
