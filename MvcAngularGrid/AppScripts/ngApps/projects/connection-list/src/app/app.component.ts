@@ -59,7 +59,7 @@ export class AppComponent implements OnInit, OnDestroy {
       filterParams: { suppressAndOrCondition: true }
     },
     {
-      headerName: 'Kodl licznika', field: 'meterCode',
+      headerName: 'Kod licznika', field: 'meterCode',
       cellRenderer: (params: ICellRendererParams) => this.linkRenderer(params),
       sortable: true,
       filter: true,
